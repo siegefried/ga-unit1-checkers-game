@@ -5,6 +5,11 @@ body {
     align-items: center;
 }
 
+.turnIndicator {
+    display: flex;
+    justify-content: space-around;
+}
+
 .board {
     display: flex;
     flex-wrap: wrap;
@@ -13,10 +18,39 @@ body {
 }
 
 .board div {
+    display: flex;
     flex-basis: 12.5%;
-    height: 12.5%
+    height: 12.5%;
+    background-color: rgba(229, 180, 3, 0.823);
+    justify-content: space-around;
 }
 
-.unusedCell {
+.board .unusedCell {
     background-color: white;
+}
+
+.blackPiece {
+    align-self: center;
+    height: 80%;
+    width: 80%;
+    background-color: black;
+    border: 2px solid white;
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    text-align: center;
+}
+
+.whitePiece {
+    align-self: center;
+    height: 80%;
+    width: 80%;
+    background-color: rgba(224, 212, 212, 0.945);
+    border: 2px solid black;
+    border-radius: 50%;
+    box-shadow: rgba(255, 255, 255, 0.35) 0px 5px 15px;
+    text-align: center;
+}
+
+.isKing {
+    border-color: red;
 }

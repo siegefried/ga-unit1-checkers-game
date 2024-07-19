@@ -77,8 +77,8 @@ const game = {
 
 //cached element references
 const unusedCellsEl = document.querySelectorAll(".unusedCells")
-const blackPiecesEl = document.querySelectorAll(".redPieces")
-const whitePiecesEl = document.querySelectorAll(".blackPieces")
+const blackPiecesEl = document.querySelectorAll(".blackPiece")
+const whitePiecesEl = document.querySelectorAll(".whitePiece")
 
 //render functions
 
@@ -91,3 +91,6 @@ const render = () -> {
 
 
 //event listeners
+
+black king = add &#9818; as textContent
+white king = add &#9812; as textContent
