@@ -55,6 +55,7 @@ const game = {
     tie: false, //unsure about implementation of draw as it is usually offered when game is unwinnable for both players
 }
 
+
 Pseudocode
 
 //constants
@@ -69,11 +70,17 @@ const game = {
 }
 
 //cached element references
-
-
+const unusedCellsEl = document.querySelectorAll(".unusedCells")
+const blackPiecesEl = document.querySelectorAll(".redPieces")
+const whitePiecesEl = document.querySelectorAll(".blackPieces")
 
 //render functions
 
+const render = () -> {
+
+}
 //functions
+
+
 
 //event listeners
