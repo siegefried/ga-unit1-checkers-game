@@ -37,12 +37,18 @@ else end turn
 (on jump, enemy playerNumPieces --)
 if move, check for change to king, if true, checker -> king and end turn, else end turn
 
+//move evaluation checks for at least
+- .isKing
+- 4x movement possibilities
+- 4x jump possibilities (forced to execute if available)
+- thinking about implementation of jump(s) post jump
+
 end turn = switch player turn, going to start of next player turn
 
 if game.win === true, render a message showing which player won, highlight reset game button
-tie is usually offered in checkers, need to think about logic of implementation
+tie is usually offered in checkers, need to think about logic of implementation (don't really need)
 
-Board will be done in html/css, not familiar enough to attempt to generate everything with JS.
+Board will be done in html/css (use flexbox or grid over table), not familiar enough to attempt to generate everything with JS.
 Pieces will be objects with properties that indicate if they are king and possible moves available
 
 Initial Data Structure of game state:
@@ -79,6 +85,7 @@ const whitePiecesEl = document.querySelectorAll(".blackPieces")
 const render = () -> {
 
 }
+
 //functions
 
 
