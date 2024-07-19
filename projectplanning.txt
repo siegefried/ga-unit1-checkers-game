@@ -1,0 +1,79 @@
+Choice of Game: Checkers
+
+User Stories:
+As a user, I want to be able to see a landing page to know I'm at the right place
+As a user, I want to be able to check the rules of the game
+As a user, I want to be able to see the moves available to me when I select a piece (force jump if available)
+As a user, I want to be able to see the opponent's move on their turn at the start of my turn
+As a user, I want to be able to receive a message with the outcome of the game
+As a user, I want to have the option to play another round
+
+Rough Flow:
+
+On page load, landing page greets players with 2 options
+-> check game rules
+-> start game
+
+checking game rules unhides hidden element that has list of instructions for this version of Checkers
+exiting out of rules hides the element again
+
+on start game, game is initialized and board element is shown with 12 checkers on each player's side on a 8x8 grid
+black(red) starts first, on lower half of board, white is second on upper half
+
+on start of turn, evaluate if player has available moves
+if false, game ends with player loss
+else prompt that it is player's turn -> allow selection of piece
+
+on selecting a piece, evaluation occurs to check for possible moves to player
+if jump/capture is available, player is forced to take it (consecutive jumps allowed)
+if jump not available, evaluate possible positions to take (backwards as well if king)
+Highlight possible positions to take
+If no available positions, visually nothing should occur and player not allowed to shift piece
+if positions are available, highlight available spots
+user selects one of available spots to jump/move piece
+if jump, check for further jumps, if no jumps available, 
+-> check for enemy piece count, if 0, end game as winner,
+else end turn
+(on jump, enemy playerNumPieces --)
+if move, check for change to king, if true, checker -> king and end turn, else end turn
+
+end turn = switch player turn, going to start of next player turn
+
+if game.win === true, render a message showing which player won, highlight reset game button
+tie is usually offered in checkers, need to think about logic of implementation
+
+Board will be done in html/css, not familiar enough to attempt to generate everything with JS.
+Pieces will be objects with properties that indicate if they are king and possible moves available
+
+Initial Data Structure of game state:
+
+const game = {
+    board: [], 
+    playerNumPieces[12, 12]
+    turn: true, //this game only involves 2 players at maximum so boolean is sufficient (maybe use 0 and 1 to access arrays?)
+    win: false, //when no moves available on turn start = lose, when pieces = 0 after opponent's turn
+    tie: false, //unsure about implementation of draw as it is usually offered when game is unwinnable for both players
+}
+
+Pseudocode
+
+//constants
+
+//variables
+const game = {
+    board: [], 
+    playerNumPieces[12, 12]
+    turn: true, //this game only involves 2 players at maximum so boolean is sufficient (maybe use 0 and 1 to access arrays?)
+    win: false, //when no moves available on turn start = lose, when pieces = 0 after opponent's turn
+    tie: false, //unsure about implementation of draw as it is usually offered when game is unwinnable for both players
+}
+
+//cached element references
+
+
+
+//render functions
+
+//functions
+
+//event listeners
