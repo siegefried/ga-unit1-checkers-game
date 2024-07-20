@@ -58,3 +58,7 @@ body {
 .moveBorder {
     border: 3px solid rgb(12, 239, 12);
 }
+
+.jumpBorder {
+    border: 3px solid red;
+}

@@ -11,7 +11,7 @@ class Checker {
     plusEighteen,
     minusSeven,
     minusNine,
-    minusForteen,
+    minusFourteen,
     minusEighteen,
     jumpThisTurn
   ) {
@@ -24,7 +24,7 @@ class Checker {
     this.plusEighteen = false;
     this.minusSeven = false;
     this.minusNine = false;
-    this.minusForteen = false;
+    this.minusFourteen = false;
     this.minusEighteen = false;
     this.jumpThisTurn = false;
   }
@@ -33,7 +33,7 @@ class Checker {
       this.plusEighteen ||
       this.plusFourteen ||
       this.minusEighteen ||
-      this.minusForteen
+      this.minusFourteen
     ) {
       return true;
     } else {
@@ -62,9 +62,9 @@ const game = {
 
 /*------------------------ Cached Element References ------------------------*/
 
-const cellEls = document.querySelectorAll(".board div");
-const blackPiecesEls = document.querySelectorAll(".blackPiece");
-const whitePiecesEls = document.querySelectorAll(".whitePiece");
+let cellEls = document.querySelectorAll(".board div");
+let blackPiecesEls = document.querySelectorAll(".blackPiece");
+let whitePiecesEls = document.querySelectorAll(".whitePiece");
 
 /*---------------------------- Render Functions -----------------------------*/
 
@@ -72,10 +72,43 @@ const renderMovePosition = (index) => {
   cellEls[index].classList.add("moveBorder");
 };
 
+const renderJumpPosition = (index) => {
+  cellEls[index].classList.add("jumpBorder");
+};
+
 const renderPlayerMove = (prevIndex, currentIndex) => {
   const tempPiece = cellEls[prevIndex].firstChild;
   cellEls[prevIndex].removeChild(cellEls[prevIndex].firstChild);
   cellEls[currentIndex].appendChild(tempPiece);
+};
+
+const renderRemoveEnemy = (index) => {
+  cellEls[index].removeChild(cellEls[index].firstChild);
+};
+
+const renderInitBoard = () => {
+  for (cell of cellEls) {
+    while (cell.firstChild) {
+      cell.removeChild(cell.firstChild);
+    }
+  }
+  for (i = 0; i < game.board.length; i++) {
+    if (game.board[i] !== "") {
+      if (game.board[i] < 12) {
+        cellEls[i].appendChild(document.createElement("p"));
+        cellEls[i].firstChild.id = game.board[i];
+        cellEls[i].firstChild.classList.add("whitePiece");
+      }
+      if (game.board[i] > 11) {
+        cellEls[i].appendChild(document.createElement("p"));
+        cellEls[i].firstChild.id = game.board[i];
+        cellEls[i].firstChild.classList.add("blackPiece");
+      }
+    }
+  }
+  cellEls = document.querySelectorAll(".board div");
+  blackPiecesEls = document.querySelectorAll(".blackPiece");
+  whitePiecesEls = document.querySelectorAll(".whitePiece");
 };
 
 const render = () => {};
@@ -133,6 +166,7 @@ const init = () => {
   initPlayerObjs();
   game.turn = true;
   game.win = false;
+  renderInitBoard();
 };
 
 //Fwd is moving up the screen from perspective of playerOne
@@ -156,7 +190,7 @@ const evalPlayerOneFwdMoves = () => {
       game.board[rightMoveIndex] !== "" &&
       cellEls[rightJumpIndex].classList.contains("unusedCell") === false
     ) {
-      checker.minusForteen = true;
+      checker.minusFourteen = true;
     }
     if (
       game.board[leftMoveIndex] === "" &&
@@ -265,7 +299,7 @@ const evalPlayerTwoFwdMoves = (checker) => {
     game.board[rightMoveIndex] !== "" &&
     cellEls[rightJumpIndex].classList.contains("unusedCell") === false
   ) {
-    checker.minusForteen = true;
+    checker.minusFourteen = true;
   }
   if (
     game.board[leftMoveIndex] === "" &&
@@ -303,7 +337,7 @@ const setJumpToFalse = (checker) => {
   checker.plusEighteen = false;
   checker.plusFourteen = false;
   checker.minusEighteen = false;
-  checker.minusForteen = false;
+  checker.minusFourteen = false;
   checker.jumpThisTurn = false;
 };
 
@@ -376,10 +410,51 @@ const handleCellClick = (event) => {
     }
   }
   event.target.classList.remove("actionCell");
+  for (const cell of cellEls) {
+    cell.classList.remove("moveBorder");
+    cell.classList.remove("jumpBorder");
+  }
+
+  const captureEnemy = (checker, jumpIndex) => {
+    checker.jumpThisTurn = true;
+    let enemyIndex = -1;
+    switch (jumpIndex - checker.boardIndex) {
+      case 18:
+        enemyIndex = checker.boardIndex + 9;
+        break;
+      case 14:
+        enemyIndex = checker.boardIndex + 7;
+        break;
+      case -18:
+        enemyIndex = checker.boardIndex - 9;
+        break;
+      case -14:
+        enemyIndex = checker.boardIndex - 7;
+        break;
+    }
+
+    let enemyObjIndex = -1;
+    if (game.turn) {
+      enemyObjIndex = game.playerTwoCheckerObjs.findIndex(
+        (checker) => checker.boardIndex === enemyIndex
+      );
+      game.playerTwoCheckerObjs.splice(enemyObjIndex, 1);
+    } else {
+      enemyObjIndex = game.playerOneCheckerObjs.findIndex(
+        (checker) => checker.boardIndex === enemyIndex
+      );
+      game.playerOneCheckerObjs.splice(enemyObjIndex, 1);
+    }
+    game.board[enemyIndex] = "";
+    renderRemoveEnemy(enemyIndex);
+  };
 
   const movePlayerPiece = (checker) => {
     if (checker.checkerId === game.activeId) {
       const prevIndex = checker.boardIndex;
+      if (Math.abs(boardIndex - prevIndex) > 9) {
+        captureEnemy(checker, boardIndex);
+      }
       game.board[checker.boardIndex] = "";
       checker.boardIndex = boardIndex;
       game.board[boardIndex] = checker.checkerId;
@@ -402,13 +477,41 @@ const handleCellClick = (event) => {
 const handlePieceClick = (event) => {
   for (const cell of cellEls) {
     cell.classList.remove("moveBorder");
+    cell.classList.remove("jumpBorder");
     cell.removeEventListener("click", handleCellClick);
   }
   game.activeId = Number(event.target.id);
 
   const displayJump = (checker) => {
     console.log("can jump");
-    //renderJumpPosition
+    if (checker.plusEighteen) {
+      renderJumpPosition(checker.boardIndex + 18);
+      cellEls[checker.boardIndex + 18].addEventListener(
+        "click",
+        handleCellClick
+      );
+    }
+    if (checker.plusFourteen) {
+      renderJumpPosition(checker.boardIndex + 14);
+      cellEls[checker.boardIndex + 14].addEventListener(
+        "click",
+        handleCellClick
+      );
+    }
+    if (checker.minusEighteen) {
+      renderJumpPosition(checker.boardIndex - 18);
+      cellEls[checker.boardIndex - 18].addEventListener(
+        "click",
+        handleCellClick
+      );
+    }
+    if (checker.minusFourteen) {
+      renderJumpPosition(checker.boardIndex - 14);
+      cellEls[checker.boardIndex - 14].addEventListener(
+        "click",
+        handleCellClick
+      );
+    }
   };
 
   const displayMove = (checker) => {
