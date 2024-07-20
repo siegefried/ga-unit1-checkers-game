@@ -72,6 +72,12 @@ const renderMovePosition = (index) => {
   cellEls[index].classList.add("moveBorder");
 };
 
+const renderPlayerMove = (prevIndex, currentIndex) => {
+  const tempPiece = cellEls[prevIndex].firstChild;
+  cellEls[prevIndex].removeChild(cellEls[prevIndex].firstChild);
+  cellEls[currentIndex].appendChild(tempPiece);
+};
+
 const render = () => {};
 
 /*-------------------------------- Functions --------------------------------*/
@@ -101,42 +107,30 @@ const initBoard = () => {
   }
 };
 
-const initPlayerOneObjs = () => {
+const initPlayerObjs = () => {
   game.playerOneCheckerObjs.length = 0;
-  for (i = 0; i < 12; i++) {
-    const blackChecker = new Checker();
-    game.playerOneCheckerObjs.push(blackChecker);
-  }
-  let initialID = 12;
-  for (const checker of game.playerOneCheckerObjs) {
-    checker.checkerId = initialID;
-    checker.boardIndex = game.board.findIndex(
-      (element) => element === initialID
-    );
-    initialID++;
-  }
-};
-
-const initPlayerTwoObjs = () => {
   game.playerTwoCheckerObjs.length = 0;
-  for (i = 0; i < 12; i++) {
-    const whiteChecker = new Checker();
-    game.playerTwoCheckerObjs.push(whiteChecker);
-  }
-  let initialID = 0;
-  for (const checker of game.playerTwoCheckerObjs) {
-    checker.checkerId = initialID;
-    checker.boardIndex = game.board.findIndex(
-      (element) => element === initialID
-    );
-    initialID++;
+  for (i = 0; i < 24; i++) {
+    if (i < 12) {
+      game.playerTwoCheckerObjs.push(new Checker());
+      game.playerTwoCheckerObjs[i].checkerId = i;
+      game.playerTwoCheckerObjs[i].boardIndex = game.board.findIndex(
+        (cell) => cell === i
+      );
+    }
+    if (i > 11) {
+      game.playerOneCheckerObjs.push(new Checker());
+      game.playerOneCheckerObjs[i - 12].checkerId = i;
+      game.playerOneCheckerObjs[i - 12].boardIndex = game.board.findIndex(
+        (cell) => cell === i
+      );
+    }
   }
 };
 
 const init = () => {
   initBoard();
-  initPlayerOneObjs();
-  initPlayerTwoObjs();
+  initPlayerObjs();
   game.turn = true;
   game.win = false;
 };
@@ -329,12 +323,6 @@ const ensureJumpIfAvailable = () => {
 };
 
 /*----------------------------- Event Listeners -----------------------------*/
-
-const renderPlayerMove = (prevIndex, currentIndex) => {
-  const tempPiece = cellEls[prevIndex].firstChild;
-  cellEls[prevIndex].removeChild(cellEls[prevIndex].firstChild);
-  cellEls[currentIndex].appendChild(tempPiece);
-};
 
 const handleCellClick = (event) => {
   event.target.classList.add("actionCell");
