@@ -21,7 +21,7 @@ body {
     display: flex;
     flex-basis: 12.5%;
     height: 12.5%;
-    background-color: rgba(229, 180, 3, 0.823);
+    background-color: rgb(150, 149, 149);
     justify-content: space-around;
 }
 
@@ -53,4 +53,8 @@ body {
 
 .isKing {
     border-color: red;
+}
+
+.moveBorder {
+    border: 3px solid rgb(12, 239, 12);
 }
