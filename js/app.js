@@ -57,7 +57,7 @@ const game = {
   playerTwoCheckerObjs: [],
   turn: true,
   win: false,
-  activeID: -1, //set to -1 when changing turns!
+  activeId: -1, //set to -1 when changing turns!
 };
 
 /*------------------------ Cached Element References ------------------------*/
@@ -299,6 +299,13 @@ const evalPossibleMoves = () => {
   }
 };
 
+const setJumpToFalse = (checker) => {
+  checker.plusEighteen = false;
+  checker.plusFourteen = false;
+  checker.minusEighteen = false;
+  checker.minusForteen - false;
+};
+
 const setMoveToFalse = (checker) => {
   checker.plusNine = false;
   checker.plusSeven = false;
@@ -306,7 +313,7 @@ const setMoveToFalse = (checker) => {
   checker.minusSeven = false;
 };
 
-const ensureJumpIfAvailable = () => {
+const removeMoveIfJump = () => {
   if (game.turn) {
     for (const checker of game.playerOneCheckerObjs) {
       if (checker.canJump()) {
@@ -320,6 +327,30 @@ const ensureJumpIfAvailable = () => {
       }
     }
   }
+};
+
+const setPlayerMoveAndJumpToFalse = () => {
+  if (game.turn) {
+    for (const checker of game.playerOneCheckerObjs) {
+      setMoveToFalse(checker);
+      setJumpToFalse(checker);
+    }
+  } else {
+    for (const checker of game.playerTwoCheckerObjs) {
+      setMoveToFalse(checker);
+      setJumpToFalse(checker);
+    }
+  }
+};
+
+const switchTurn = () => {
+  removeTurnEvtListeners();
+  setPlayerMoveAndJumpToFalse();
+  game.activeId = -1;
+  game.turn = !game.turn;
+  evalPossibleMoves();
+  removeMoveIfJump();
+  addPiecesEventListeners();
 };
 
 /*----------------------------- Event Listeners -----------------------------*/
@@ -336,7 +367,7 @@ const handleCellClick = (event) => {
 
   if (game.turn) {
     for (const checker of game.playerOneCheckerObjs) {
-      if (checker.checkerId === game.activeID) {
+      if (checker.checkerId === game.activeId) {
         const prevIndex = checker.boardIndex;
         game.board[checker.boardIndex] = "";
         checker.boardIndex = boardIndex;
@@ -352,7 +383,7 @@ const handlePieceClick = (event) => {
     cell.classList.remove("moveBorder");
     cell.removeEventListener("click", handleCellClick);
   }
-  game.activeID = Number(event.target.id);
+  game.activeId = Number(event.target.id);
   if (game.turn) {
     for (const checker of game.playerOneCheckerObjs) {
       if (checker.checkerId === Number(event.target.id)) {
@@ -405,9 +436,28 @@ const handlePieceClick = (event) => {
   }
 };
 
+const removeTurnEvtListeners = () => {
+  for (const cell of cellEls) {
+    cell.removeEventListener("click", handleCellClick);
+  }
+  if (game.turn) {
+    for (const checker of blackPiecesEls) {
+      checker.removeEventListener("click", handlePieceClick);
+    }
+  } else {
+    for (const checker of whitePiecesEls) {
+      checker.removeEventListener("click", handlePieceClick);
+    }
+  }
+};
+
 const addPiecesEventListeners = () => {
   if (game.turn) {
     for (const checker of blackPiecesEls) {
+      checker.addEventListener("click", handlePieceClick);
+    }
+  } else {
+    for (const checker of whitePiecesEls) {
       checker.addEventListener("click", handlePieceClick);
     }
   }
@@ -415,6 +465,7 @@ const addPiecesEventListeners = () => {
 
 init();
 evalPossibleMoves();
+removeMoveIfJump();
 addPiecesEventListeners();
 
 //move id15 to cell 39
