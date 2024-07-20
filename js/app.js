@@ -57,7 +57,7 @@ const game = {
   playerTwoCheckerObjs: [],
   turn: true,
   win: false,
-  activeId: -1, //set to -1 when changing turns!
+  activeId: -1,
 };
 
 /*------------------------ Cached Element References ------------------------*/
@@ -303,7 +303,8 @@ const setJumpToFalse = (checker) => {
   checker.plusEighteen = false;
   checker.plusFourteen = false;
   checker.minusEighteen = false;
-  checker.minusForteen - false;
+  checker.minusForteen = false;
+  checker.jumpThisTurn = false;
 };
 
 const setMoveToFalse = (checker) => {
@@ -314,15 +315,26 @@ const setMoveToFalse = (checker) => {
 };
 
 const removeMoveIfJump = () => {
+  let isJumpAvailable = false;
   if (game.turn) {
     for (const checker of game.playerOneCheckerObjs) {
       if (checker.canJump()) {
+        isJumpAvailable = true;
+      }
+    }
+    if (isJumpAvailable) {
+      for (const checker of game.playerOneCheckerObjs) {
         setMoveToFalse(checker);
       }
     }
   } else {
     for (const checker of game.playerTwoCheckerObjs) {
       if (checker.canJump()) {
+        isJumpAvailable = true;
+      }
+    }
+    if (isJumpAvailable) {
+      for (const checker of game.playerTwoCheckerObjs) {
         setMoveToFalse(checker);
       }
     }
@@ -365,15 +377,24 @@ const handleCellClick = (event) => {
   }
   event.target.classList.remove("actionCell");
 
+  const movePlayerPiece = (checker) => {
+    if (checker.checkerId === game.activeId) {
+      const prevIndex = checker.boardIndex;
+      game.board[checker.boardIndex] = "";
+      checker.boardIndex = boardIndex;
+      game.board[boardIndex] = checker.checkerId;
+      renderPlayerMove(prevIndex, boardIndex);
+      switchTurn();
+    }
+  };
+
   if (game.turn) {
     for (const checker of game.playerOneCheckerObjs) {
-      if (checker.checkerId === game.activeId) {
-        const prevIndex = checker.boardIndex;
-        game.board[checker.boardIndex] = "";
-        checker.boardIndex = boardIndex;
-        game.board[boardIndex] = checker.checkerId;
-        renderPlayerMove(prevIndex, boardIndex);
-      }
+      movePlayerPiece(checker);
+    }
+  } else {
+    for (const checker of game.playerTwoCheckerObjs) {
+      movePlayerPiece(checker);
     }
   }
 };
@@ -384,52 +405,73 @@ const handlePieceClick = (event) => {
     cell.removeEventListener("click", handleCellClick);
   }
   game.activeId = Number(event.target.id);
+
+  const displayJump = (checker) => {
+    console.log("can jump");
+    //renderJumpPosition
+  };
+
+  const displayMove = (checker) => {
+    console.log("can move");
+    if (checker.plusNine) {
+      renderMovePosition(checker.boardIndex + 9);
+      cellEls[checker.boardIndex + 9].addEventListener(
+        "click",
+        handleCellClick
+      );
+    }
+    if (checker.plusSeven) {
+      renderMovePosition(checker.boardIndex + 7);
+      cellEls[checker.boardIndex + 7].addEventListener(
+        "click",
+        handleCellClick
+      );
+    }
+    if (checker.minusNine) {
+      renderMovePosition(checker.boardIndex - 9);
+
+      cellEls[checker.boardIndex - 9].addEventListener(
+        "click",
+        handleCellClick
+      );
+    }
+    if (checker.minusSeven) {
+      renderMovePosition(checker.boardIndex - 7);
+
+      cellEls[checker.boardIndex - 7].addEventListener(
+        "click",
+        handleCellClick
+      );
+    }
+  };
+
   if (game.turn) {
     for (const checker of game.playerOneCheckerObjs) {
       if (checker.checkerId === Number(event.target.id)) {
-        // console.log(checker);
         if (!checker.canJump() && !checker.canMove()) {
           console.log("no action");
           return;
         }
         if (checker.canJump()) {
-          console.log("can jump");
-          //renderJumpPositions()
+          displayJump(checker);
         }
         if (checker.canMove()) {
-          console.log("can move");
-          if (checker.plusNine) {
-            renderMovePosition(checker.boardIndex + 9);
-            cellEls[checker.boardIndex + 9].addEventListener(
-              "click",
-              handleCellClick
-            );
-          }
-          if (checker.plusSeven) {
-            renderMovePosition(checker.boardIndex + 7);
-            cellEls[checker.boardIndex + 7].addEventListener(
-              "click",
-              handleCellClick
-            );
-          }
-          if (checker.minusNine) {
-            renderMovePosition(checker.boardIndex - 9);
-
-            cellEls[checker.boardIndex - 9].addEventListener(
-              "click",
-              handleCellClick
-            );
-            console.log(cellEls[checker.boardIndex - 9]);
-          }
-          if (checker.minusSeven) {
-            renderMovePosition(checker.boardIndex - 7);
-
-            cellEls[checker.boardIndex - 7].addEventListener(
-              "click",
-              handleCellClick
-            );
-            console.log(cellEls[checker.boardIndex - 7]);
-          }
+          displayMove(checker);
+        }
+      }
+    }
+  } else {
+    for (const checker of game.playerTwoCheckerObjs) {
+      if (checker.checkerId === Number(event.target.id)) {
+        if (!checker.canJump() && !checker.canMove()) {
+          console.log("no action");
+          return;
+        }
+        if (checker.canJump()) {
+          displayJump(checker);
+        }
+        if (checker.canMove()) {
+          displayMove(checker);
         }
       }
     }
@@ -467,16 +509,3 @@ init();
 evalPossibleMoves();
 removeMoveIfJump();
 addPiecesEventListeners();
-
-//move id15 to cell 39
-
-// for (const checker of game.playerOneCheckerObjs) {
-//   if (checker.checkerId === 15) {
-//     const tempPiece = cellEls[checker.boardIndex].firstChild;
-//     cellEls[checker.boardIndex].removeChild(
-//       cellEls[checker.boardIndex].firstChild
-//     );
-//     checker.boardIndex = 39;
-//     cellEls[checker.boardIndex].appendChild(tempPiece);
-//   }
-// }
