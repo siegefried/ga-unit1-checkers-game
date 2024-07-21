@@ -49,6 +49,8 @@ class Checker {
   }
 }
 
+const KING = 99;
+
 /*---------------------------- Variables (state) ----------------------------*/
 
 const game = {
@@ -96,6 +98,15 @@ const renderPlayerMove = (prevIndex, currentIndex) => {
 
 const renderRemoveEnemy = (index) => {
   cellEls[index].removeChild(cellEls[index].firstChild);
+};
+
+const renderKingCrown = (index) => {
+  cellEls[index].firstChild.classList.add("isKing");
+  if (game.turn) {
+    cellEls[index].firstChild.innerHTML = "&#9818;";
+  } else {
+    cellEls[index].firstChild.innerHTML = "&#9812;";
+  }
 };
 
 const renderInitBoard = () => {
@@ -411,17 +422,25 @@ const setPlayerMoveAndJumpToFalse = () => {
   }
 };
 
-const switchTurn = () => {
-  removeTurnEvtListeners();
-  setPlayerMoveAndJumpToFalse();
-  game.activeId = -1;
-  game.turn = !game.turn;
-  evalPossibleMoves();
-  removeMoveIfJump();
-  addPiecesEventListeners();
+const evalIsKing = () => {
+  if (game.turn) {
+    for (const checker of game.playerOneCheckerObjs) {
+      if (checker.boardIndex < 8 && !checker.isKing) {
+        checker.isKing = true;
+        game.activeId = KING;
+        renderKingCrown(checker.boardIndex);
+      }
+    }
+  } else {
+    for (const checker of game.playerTwoCheckerObjs) {
+      if (checker.boardIndex > 55 && !checker.isKing) {
+        checker.isKing = true;
+        game.activeId = KING;
+        renderKingCrown(checker.boardIndex);
+      }
+    }
+  }
 };
-
-/*----------------------------- Event Listeners -----------------------------*/
 
 const evalPostAction = () => {
   let didPlayerJump = false;
@@ -437,6 +456,10 @@ const evalPostAction = () => {
         didPlayerJump = true;
       }
     }
+  }
+  evalIsKing();
+  if (game.activeId === KING) {
+    didPlayerJump = false;
   }
 
   if (didPlayerJump) {
@@ -464,12 +487,24 @@ const evalPostAction = () => {
       }
     }
     if (!checkJumpAvailable) {
-      switchTurn();
+      evalPostAction();
     }
   } else {
     switchTurn();
   }
 };
+
+const switchTurn = () => {
+  removeTurnEvtListeners();
+  setPlayerMoveAndJumpToFalse();
+  game.activeId = -1;
+  game.turn = !game.turn;
+  evalPossibleMoves();
+  removeMoveIfJump();
+  addPiecesEventListeners();
+};
+
+/*----------------------------- Event Listeners -----------------------------*/
 
 const handleCellClick = (event) => {
   event.target.classList.add("actionCell");
