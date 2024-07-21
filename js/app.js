@@ -76,6 +76,18 @@ const renderJumpPosition = (index) => {
   cellEls[index].classList.add("jumpBorder");
 };
 
+const renderCanJump = (index) => {
+  cellEls[index].classList.add("canJump");
+};
+
+const renderRemoveCellClasses = () => {
+  for (const cell of cellEls) {
+    cell.classList.remove("moveBorder");
+    cell.classList.remove("jumpBorder");
+    cell.classList.remove("canJump");
+  }
+};
+
 const renderPlayerMove = (prevIndex, currentIndex) => {
   const tempPiece = cellEls[prevIndex].firstChild;
   cellEls[prevIndex].removeChild(cellEls[prevIndex].firstChild);
@@ -88,9 +100,7 @@ const renderRemoveEnemy = (index) => {
 
 const renderInitBoard = () => {
   for (cell of cellEls) {
-    while (cell.firstChild) {
-      cell.removeChild(cell.firstChild);
-    }
+    cell.replaceChildren();
   }
   for (i = 0; i < game.board.length; i++) {
     if (game.board[i] !== "") {
@@ -166,7 +176,10 @@ const init = () => {
   initPlayerObjs();
   game.turn = true;
   game.win = false;
+  evalPossibleMoves();
+  removeMoveIfJump();
   renderInitBoard();
+  addPiecesEventListeners();
 };
 
 //Fwd is moving up the screen from perspective of playerOne
@@ -338,7 +351,6 @@ const setJumpToFalse = (checker) => {
   checker.plusFourteen = false;
   checker.minusEighteen = false;
   checker.minusFourteen = false;
-  checker.jumpThisTurn = false;
 };
 
 const setMoveToFalse = (checker) => {
@@ -359,6 +371,10 @@ const removeMoveIfJump = () => {
     if (isJumpAvailable) {
       for (const checker of game.playerOneCheckerObjs) {
         setMoveToFalse(checker);
+        if (checker.canJump()) {
+          console.log("can jump");
+          renderCanJump([checker.boardIndex]);
+        }
       }
     }
   } else {
@@ -370,6 +386,10 @@ const removeMoveIfJump = () => {
     if (isJumpAvailable) {
       for (const checker of game.playerTwoCheckerObjs) {
         setMoveToFalse(checker);
+        if (checker.canJump()) {
+          console.log("can jump");
+          renderCanJump([checker.boardIndex]);
+        }
       }
     }
   }
@@ -380,11 +400,13 @@ const setPlayerMoveAndJumpToFalse = () => {
     for (const checker of game.playerOneCheckerObjs) {
       setMoveToFalse(checker);
       setJumpToFalse(checker);
+      checker.jumpThisTurn = false;
     }
   } else {
     for (const checker of game.playerTwoCheckerObjs) {
       setMoveToFalse(checker);
       setJumpToFalse(checker);
+      checker.jumpThisTurn = false;
     }
   }
 };
@@ -401,6 +423,54 @@ const switchTurn = () => {
 
 /*----------------------------- Event Listeners -----------------------------*/
 
+const evalPostAction = () => {
+  let didPlayerJump = false;
+  if (game.turn) {
+    for (const checker of game.playerOneCheckerObjs) {
+      if (checker.jumpThisTurn) {
+        didPlayerJump = true;
+      }
+    }
+  } else {
+    for (const checker of game.playerTwoCheckerObjs) {
+      if (checker.jumpThisTurn) {
+        didPlayerJump = true;
+      }
+    }
+  }
+
+  if (didPlayerJump) {
+    setPlayerMoveAndJumpToFalse();
+    evalPossibleMoves();
+    removeMoveIfJump();
+    removeTurnEvtListeners();
+    for (i = 0; i < cellEls.length; i++) {
+      if (game.board[i] === game.activeId) {
+        cellEls[i].firstChild.addEventListener("click", handlePieceClick);
+      }
+    }
+    let checkJumpAvailable = false;
+    if (game.turn) {
+      for (const checker of game.playerOneCheckerObjs) {
+        if (checker.canJump()) {
+          checkJumpAvailable = true;
+        }
+      }
+    } else {
+      for (const checker of game.playerTwoCheckerObjs) {
+        if (checker.canJump()) {
+          checkJumpAvailable = true;
+        }
+      }
+    }
+    if (!checkJumpAvailable) {
+      switchTurn();
+    }
+  } else {
+    switchTurn();
+  }
+};
+
 const handleCellClick = (event) => {
   event.target.classList.add("actionCell");
   let boardIndex = -1;
@@ -410,10 +480,7 @@ const handleCellClick = (event) => {
     }
   }
   event.target.classList.remove("actionCell");
-  for (const cell of cellEls) {
-    cell.classList.remove("moveBorder");
-    cell.classList.remove("jumpBorder");
-  }
+  renderRemoveCellClasses();
 
   const captureEnemy = (checker, jumpIndex) => {
     checker.jumpThisTurn = true;
@@ -459,7 +526,7 @@ const handleCellClick = (event) => {
       checker.boardIndex = boardIndex;
       game.board[boardIndex] = checker.checkerId;
       renderPlayerMove(prevIndex, boardIndex);
-      switchTurn();
+      evalPostAction();
     }
   };
 
@@ -475,9 +542,8 @@ const handleCellClick = (event) => {
 };
 
 const handlePieceClick = (event) => {
+  renderRemoveCellClasses();
   for (const cell of cellEls) {
-    cell.classList.remove("moveBorder");
-    cell.classList.remove("jumpBorder");
     cell.removeEventListener("click", handleCellClick);
   }
   game.activeId = Number(event.target.id);
@@ -609,6 +675,3 @@ const addPiecesEventListeners = () => {
 };
 
 init();
-evalPossibleMoves();
-removeMoveIfJump();
-addPiecesEventListeners();

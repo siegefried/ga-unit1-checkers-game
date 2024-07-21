@@ -62,3 +62,7 @@ body {
 .jumpBorder {
     border: 3px solid red;
 }
+
+.canJump {
+    border: 3px solid red;
+}
