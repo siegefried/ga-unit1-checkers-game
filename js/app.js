@@ -90,13 +90,13 @@ const renderRemoveCellClasses = () => {
   }
 };
 
-const renderPlayerMove = (prevIndex, currentIndex) => {
+const renderMovePlayer = (prevIndex, currentIndex) => {
   const tempPiece = cellEls[prevIndex].firstChild;
   cellEls[prevIndex].removeChild(cellEls[prevIndex].firstChild);
   cellEls[currentIndex].appendChild(tempPiece);
 };
 
-const renderRemoveEnemy = (index) => {
+const renderCaptureEnemy = (index) => {
   cellEls[index].removeChild(cellEls[index].firstChild);
 };
 
@@ -183,51 +183,51 @@ const initPlayerObjs = () => {
 };
 
 const init = () => {
+  removeTurnEvtListeners();
   initBoard();
   initPlayerObjs();
   game.turn = true;
   game.win = false;
-  evalPossibleMoves();
+  GainNode.activeId = -1;
+  evalPlayerPossibleMoves();
   removeMoveIfJump();
   renderInitBoard();
   addPiecesEventListeners();
 };
 
 //Fwd is moving up the screen from perspective of playerOne
-const evalPlayerOneFwdMoves = () => {
-  for (const checker of game.playerOneCheckerObjs) {
-    const leftJumpIndex = checker.boardIndex - 18;
-    const leftMoveIndex = checker.boardIndex - 9;
-    const rightJumpIndex = checker.boardIndex - 14;
-    const rightMoveIndex = checker.boardIndex - 7;
-    if (
-      game.board[leftJumpIndex] === "" &&
-      game.board[leftMoveIndex] < 12 &&
-      game.board[leftMoveIndex] !== "" &&
-      cellEls[leftJumpIndex].classList.contains("unusedCell") === false
-    ) {
-      checker.minusEighteen = true;
-    }
-    if (
-      game.board[rightJumpIndex] === "" &&
-      game.board[rightMoveIndex] < 12 &&
-      game.board[rightMoveIndex] !== "" &&
-      cellEls[rightJumpIndex].classList.contains("unusedCell") === false
-    ) {
-      checker.minusFourteen = true;
-    }
-    if (
-      game.board[leftMoveIndex] === "" &&
-      cellEls[leftMoveIndex].classList.contains("unusedCell") === false
-    ) {
-      checker.minusNine = true;
-    }
-    if (
-      game.board[rightMoveIndex] === "" &&
-      cellEls[rightMoveIndex].classList.contains("unusedCell") === false
-    ) {
-      checker.minusSeven = true;
-    }
+const evalPlayerOneFwdMoves = (checker) => {
+  const leftJumpIndex = checker.boardIndex - 18;
+  const leftMoveIndex = checker.boardIndex - 9;
+  const rightJumpIndex = checker.boardIndex - 14;
+  const rightMoveIndex = checker.boardIndex - 7;
+  if (
+    game.board[leftJumpIndex] === "" &&
+    game.board[leftMoveIndex] < 12 &&
+    game.board[leftMoveIndex] !== "" &&
+    cellEls[leftJumpIndex].classList.contains("unusedCell") === false
+  ) {
+    checker.minusEighteen = true;
+  }
+  if (
+    game.board[rightJumpIndex] === "" &&
+    game.board[rightMoveIndex] < 12 &&
+    game.board[rightMoveIndex] !== "" &&
+    cellEls[rightJumpIndex].classList.contains("unusedCell") === false
+  ) {
+    checker.minusFourteen = true;
+  }
+  if (
+    game.board[leftMoveIndex] === "" &&
+    cellEls[leftMoveIndex].classList.contains("unusedCell") === false
+  ) {
+    checker.minusNine = true;
+  }
+  if (
+    game.board[rightMoveIndex] === "" &&
+    cellEls[rightMoveIndex].classList.contains("unusedCell") === false
+  ) {
+    checker.minusSeven = true;
   }
 };
 
@@ -267,40 +267,38 @@ const evalPlayerOneBwdMoves = (checker) => {
   }
 };
 
-const evalPlayerTwoBwdMoves = () => {
-  for (const checker of game.playerTwoCheckerObjs) {
-    const bwdLeftJumpIndex = checker.boardIndex + 14;
-    const bwdLeftMoveIndex = checker.boardIndex + 7;
-    const bwdRightJumpIndex = checker.boardIndex + 18;
-    const bwdRightMoveIndex = checker.boardIndex + 9;
-    if (
-      game.board[bwdLeftJumpIndex] === "" &&
-      game.board[bwdLeftMoveIndex] > 11 &&
-      game.board[bwdLeftMoveIndex] !== "" &&
-      cellEls[bwdLeftJumpIndex].classList.contains("unusedCell") === false
-    ) {
-      checker.plusFourteen = true;
-    }
-    if (
-      game.board[bwdRightJumpIndex] === "" &&
-      game.board[bwdRightMoveIndex] > 11 &&
-      game.board[bwdRightMoveIndex] !== "" &&
-      cellEls[bwdRightJumpIndex].classList.contains("unusedCell") === false
-    ) {
-      checker.plusEighteen = true;
-    }
-    if (
-      game.board[bwdLeftMoveIndex] === "" &&
-      cellEls[bwdLeftMoveIndex].classList.contains("unusedCell") === false
-    ) {
-      checker.plusSeven = true;
-    }
-    if (
-      game.board[bwdRightMoveIndex] === "" &&
-      cellEls[bwdRightMoveIndex].classList.contains("unusedCell") === false
-    ) {
-      checker.plusNine = true;
-    }
+const evalPlayerTwoBwdMoves = (checker) => {
+  const bwdLeftJumpIndex = checker.boardIndex + 14;
+  const bwdLeftMoveIndex = checker.boardIndex + 7;
+  const bwdRightJumpIndex = checker.boardIndex + 18;
+  const bwdRightMoveIndex = checker.boardIndex + 9;
+  if (
+    game.board[bwdLeftJumpIndex] === "" &&
+    game.board[bwdLeftMoveIndex] > 11 &&
+    game.board[bwdLeftMoveIndex] !== "" &&
+    cellEls[bwdLeftJumpIndex].classList.contains("unusedCell") === false
+  ) {
+    checker.plusFourteen = true;
+  }
+  if (
+    game.board[bwdRightJumpIndex] === "" &&
+    game.board[bwdRightMoveIndex] > 11 &&
+    game.board[bwdRightMoveIndex] !== "" &&
+    cellEls[bwdRightJumpIndex].classList.contains("unusedCell") === false
+  ) {
+    checker.plusEighteen = true;
+  }
+  if (
+    game.board[bwdLeftMoveIndex] === "" &&
+    cellEls[bwdLeftMoveIndex].classList.contains("unusedCell") === false
+  ) {
+    checker.plusSeven = true;
+  }
+  if (
+    game.board[bwdRightMoveIndex] === "" &&
+    cellEls[bwdRightMoveIndex].classList.contains("unusedCell") === false
+  ) {
+    checker.plusNine = true;
   }
 };
 
@@ -339,20 +337,28 @@ const evalPlayerTwoFwdMoves = (checker) => {
   }
 };
 
-const evalPossibleMoves = () => {
+const evalPlayerPossibleMoves = () => {
   if (game.turn) {
-    evalPlayerOneFwdMoves();
     for (const checker of game.playerOneCheckerObjs) {
-      if (checker.isKing) {
-        evalPlayerOneBwdMoves(checker);
-      }
+      evalPossibleMoves(checker);
     }
   } else {
-    evalPlayerTwoBwdMoves();
     for (const checker of game.playerTwoCheckerObjs) {
-      if (checker.isKing) {
-        evalPlayerTwoFwdMoves(checker);
-      }
+      evalPossibleMoves(checker);
+    }
+  }
+};
+
+const evalPossibleMoves = (checker) => {
+  if (game.turn) {
+    evalPlayerOneFwdMoves(checker);
+    if (checker.isKing) {
+      evalPlayerOneBwdMoves(checker);
+    }
+  } else {
+    evalPlayerTwoBwdMoves(checker);
+    if (checker.isKing) {
+      evalPlayerTwoFwdMoves(checker);
     }
   }
 };
@@ -442,6 +448,22 @@ const evalIsKing = () => {
   }
 };
 
+const locateActiveChecker = () => {
+  if (game.turn) {
+    for (const checker of game.playerOneCheckerObjs) {
+      if (checker.checkerId === game.activeId) {
+        return checker;
+      }
+    }
+  } else {
+    for (const checker of game.playerTwoCheckerObjs) {
+      if (checker.checkerId === game.activeId) {
+        return checker;
+      }
+    }
+  }
+};
+
 const evalPostAction = () => {
   let didPlayerJump = false;
   if (game.turn) {
@@ -464,29 +486,16 @@ const evalPostAction = () => {
 
   if (didPlayerJump) {
     setPlayerMoveAndJumpToFalse();
-    evalPossibleMoves();
+    const activeChecker = locateActiveChecker();
+    evalPossibleMoves(activeChecker);
     removeMoveIfJump();
     removeTurnEvtListeners();
-    for (i = 0; i < cellEls.length; i++) {
-      if (game.board[i] === game.activeId) {
-        cellEls[i].firstChild.addEventListener("click", handlePieceClick);
-      }
-    }
-    let checkJumpAvailable = false;
-    if (game.turn) {
-      for (const checker of game.playerOneCheckerObjs) {
-        if (checker.canJump()) {
-          checkJumpAvailable = true;
-        }
-      }
+    if (activeChecker.canJump()) {
+      cellEls[activeChecker.boardIndex].firstChild.addEventListener(
+        "click",
+        handlePieceClick
+      );
     } else {
-      for (const checker of game.playerTwoCheckerObjs) {
-        if (checker.canJump()) {
-          checkJumpAvailable = true;
-        }
-      }
-    }
-    if (!checkJumpAvailable) {
       evalPostAction();
     }
   } else {
@@ -494,12 +503,63 @@ const evalPostAction = () => {
   }
 };
 
+const isOpponentZero = () => {
+  if (game.turn) {
+    if (game.playerTwoCheckerObjs.length === 0) {
+      game.win = true;
+      //render P1 Win Message
+      console.log("P1 wins");
+    }
+  } else {
+    if (game.playerOneCheckerObjs.length === 0) {
+      game.win = true;
+      //render P2 Win Message
+      console.log("P2 wins");
+    }
+  }
+};
+
+const isActionAvailable = () => {
+  let checkerAction = 0;
+  if (game.turn) {
+    for (const checker of game.playerOneCheckerObjs) {
+      if (checker.canJump() || checker.canMove()) {
+        checkerAction++;
+      }
+    }
+  } else {
+    for (const checker of game.playerTwoCheckerObjs) {
+      if (checker.canJump() || checker.canMove()) {
+        checkerAction++;
+      }
+    }
+  }
+  if (checkerAction === 0) {
+    game.win = true;
+    if (game.turn) {
+      //render P2 Win Message
+      console.log("P2 wins");
+    } else {
+      //render P1 Win Message
+      console.log("P1 wins");
+    }
+  }
+};
+
 const switchTurn = () => {
   removeTurnEvtListeners();
+  isOpponentZero();
+  if (game.win) {
+    return;
+  }
   setPlayerMoveAndJumpToFalse();
   game.activeId = -1;
   game.turn = !game.turn;
-  evalPossibleMoves();
+  evalPlayerPossibleMoves();
+  isActionAvailable();
+  if (game.win) {
+    return;
+  }
   removeMoveIfJump();
   addPiecesEventListeners();
 };
@@ -548,7 +608,7 @@ const handleCellClick = (event) => {
       game.playerOneCheckerObjs.splice(enemyObjIndex, 1);
     }
     game.board[enemyIndex] = "";
-    renderRemoveEnemy(enemyIndex);
+    renderCaptureEnemy(enemyIndex);
   };
 
   const movePlayerPiece = (checker) => {
@@ -560,7 +620,7 @@ const handleCellClick = (event) => {
       game.board[checker.boardIndex] = "";
       checker.boardIndex = boardIndex;
       game.board[boardIndex] = checker.checkerId;
-      renderPlayerMove(prevIndex, boardIndex);
+      renderMovePlayer(prevIndex, boardIndex);
       evalPostAction();
     }
   };
