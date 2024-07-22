@@ -170,3 +170,25 @@ section {
 .fadedNav:hover {
   opacity: 1;
 }
+
+.hidden {
+  visibility: hidden;
+  display: none;
+}
+
+#landing {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#main {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}

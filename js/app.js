@@ -70,6 +70,7 @@ let whitePiecesEls = document.querySelectorAll(".whitePiece");
 const blackTurnEl = document.querySelector("#blackTurn");
 const whiteTurnEl = document.querySelector("#whiteTurn");
 const resetGameEl = document.querySelector("#resetGame");
+const startBtnEL = document.querySelector("#start");
 
 /*---------------------------- Render Functions -----------------------------*/
 
@@ -145,6 +146,13 @@ const renderInitBoard = () => {
   whitePiecesEls = document.querySelectorAll(".whitePiece");
 };
 
+const renderGame = () => {
+  document.querySelector(".landingHidden").classList.add("hidden");
+  document.querySelector(".landingHidden").id = "notInUse";
+  document.querySelector(".mainHidden").classList.remove("hidden");
+  document.querySelector(".mainHidden").id = "main";
+};
+
 /*-------------------------------- Functions --------------------------------*/
 
 const initBoard = () => {
@@ -194,6 +202,8 @@ const initPlayerObjs = () => {
 };
 
 const init = () => {
+  renderGame();
+  renderRemoveCellClasses();
   removeTurnEvtListeners();
   initBoard();
   initPlayerObjs();
@@ -782,6 +792,5 @@ const addPiecesEventListeners = () => {
   }
 };
 
+startBtnEL.addEventListener("click", init);
 resetGameEl.addEventListener("click", init);
-
-init();

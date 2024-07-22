@@ -9,101 +9,112 @@
     <title>Checkers Game</title>
   </head>
   <body>
-    <nav class="fadedNav">
+    <div id="landing" class="landingHidden">
       <div>
-        <ul class="menu">
-          <li>Rules</li>
-          <li id="resetGame">Reset Game</li>
-        </ul>
+        <h3>Welcome to Josh's Checkers</h3>
       </div>
-    </nav>
-    <section class="game">
-      <div id="turnIndicator">
-        <p id="blackTurn">Black</p>
-        <p>|</p>
-        <p id="whiteTurn">White</p>
+      <div id="landingBtns">
+        <button>Rules</button>
+        <button id="start">Start</button>
       </div>
-      <section class="board">
-        <!-- 1st Row -->
-        <div class="unusedCell"></div>
-        <div><p class="whitePiece" id="0"></p></div>
-        <div class="unusedCell"></div>
-        <div><p class="whitePiece" id="1"></p></div>
-        <div class="unusedCell"></div>
-        <div><p class="whitePiece" id="2"></p></div>
-        <div class="unusedCell"></div>
-        <div><p class="whitePiece" id="3"></p></div>
-        <!-- 2nd Row  -->
-        <div><p class="whitePiece" id="4"></p></div>
-        <div class="unusedCell"></div>
-        <div><p class="whitePiece" id="5"></p></div>
-        <div class="unusedCell"></div>
-        <div><p class="whitePiece" id="6"></p></div>
-        <div class="unusedCell"></div>
-        <div><p class="whitePiece" id="7"></p></div>
-        <div class="unusedCell"></div>
-        <!-- 3rd Row -->
-        <div class="unusedCell"></div>
-        <div><p class="whitePiece" id="8"></p></div>
-        <div class="unusedCell"></div>
-        <div><p class="whitePiece" id="9"></p></div>
-        <div class="unusedCell"></div>
-        <div><p class="whitePiece" id="10"></p></div>
-        <div class="unusedCell"></div>
-        <div><p class="whitePiece" id="11"></p></div>
-        <!-- 4th Row -->
-        <div></div>
-        <div class="unusedCell"></div>
-        <div></div>
-        <div class="unusedCell"></div>
-        <div></div>
-        <div class="unusedCell"></div>
-        <div></div>
-        <div class="unusedCell"></div>
-        <!-- 5th Row -->
-        <div class="unusedCell"></div>
-        <div></div>
-        <div class="unusedCell"></div>
-        <div></div>
-        <div class="unusedCell"></div>
-        <div></div>
-        <div class="unusedCell"></div>
-        <div></div>
-        <!-- 6th Row -->
-        <div><p class="blackPiece" id="12"></p></div>
-        <div class="unusedCell"></div>
-        <div><p class="blackPiece" id="13"></p></div>
-        <div class="unusedCell"></div>
-        <div><p class="blackPiece" id="14"></p></div>
-        <div class="unusedCell"></div>
-        <div><p class="blackPiece" id="15"></p></div>
-        <div class="unusedCell"></div>
-        <!-- 7th Row -->
-        <div class="unusedCell"></div>
-        <div><p class="blackPiece" id="16"></p></div>
-        <div class="unusedCell"></div>
-        <div><p class="blackPiece" id="17"></p></div>
-        <div class="unusedCell"></div>
-        <div><p class="blackPiece" id="18"></p></div>
-        <div class="unusedCell"></div>
-        <div><p class="blackPiece" id="19"></p></div>
-        <!-- 8th Row -->
-        <div><p class="blackPiece" id="20"></p></div>
-        <div class="unusedCell"></div>
-        <div><p class="blackPiece" id="21"></p></div>
-        <div class="unusedCell"></div>
-        <div><p class="blackPiece" id="22"></p></div>
-        <div class="unusedCell"></div>
-        <div><p class="blackPiece" id="23"></p></div>
-        <div class="unusedCell"></div>
+    </div>
+    <div class="hidden mainHidden">
+      <nav class="fadedNav">
+        <div>
+          <ul class="menu">
+            <li>Rules</li>
+            <li id="resetGame">Reset Game</li>
+          </ul>
+        </div>
+      </nav>
+      <section class="game">
+        <div id="turnIndicator">
+          <p id="blackTurn">Black</p>
+          <p>|</p>
+          <p id="whiteTurn">White</p>
+        </div>
+        <section class="board">
+          <!-- 1st Row -->
+          <div class="unusedCell"></div>
+          <div><p class="whitePiece" id="0"></p></div>
+          <div class="unusedCell"></div>
+          <div><p class="whitePiece" id="1"></p></div>
+          <div class="unusedCell"></div>
+          <div><p class="whitePiece" id="2"></p></div>
+          <div class="unusedCell"></div>
+          <div><p class="whitePiece" id="3"></p></div>
+          <!-- 2nd Row  -->
+          <div><p class="whitePiece" id="4"></p></div>
+          <div class="unusedCell"></div>
+          <div><p class="whitePiece" id="5"></p></div>
+          <div class="unusedCell"></div>
+          <div><p class="whitePiece" id="6"></p></div>
+          <div class="unusedCell"></div>
+          <div><p class="whitePiece" id="7"></p></div>
+          <div class="unusedCell"></div>
+          <!-- 3rd Row -->
+          <div class="unusedCell"></div>
+          <div><p class="whitePiece" id="8"></p></div>
+          <div class="unusedCell"></div>
+          <div><p class="whitePiece" id="9"></p></div>
+          <div class="unusedCell"></div>
+          <div><p class="whitePiece" id="10"></p></div>
+          <div class="unusedCell"></div>
+          <div><p class="whitePiece" id="11"></p></div>
+          <!-- 4th Row -->
+          <div></div>
+          <div class="unusedCell"></div>
+          <div></div>
+          <div class="unusedCell"></div>
+          <div></div>
+          <div class="unusedCell"></div>
+          <div></div>
+          <div class="unusedCell"></div>
+          <!-- 5th Row -->
+          <div class="unusedCell"></div>
+          <div></div>
+          <div class="unusedCell"></div>
+          <div></div>
+          <div class="unusedCell"></div>
+          <div></div>
+          <div class="unusedCell"></div>
+          <div></div>
+          <!-- 6th Row -->
+          <div><p class="blackPiece" id="12"></p></div>
+          <div class="unusedCell"></div>
+          <div><p class="blackPiece" id="13"></p></div>
+          <div class="unusedCell"></div>
+          <div><p class="blackPiece" id="14"></p></div>
+          <div class="unusedCell"></div>
+          <div><p class="blackPiece" id="15"></p></div>
+          <div class="unusedCell"></div>
+          <!-- 7th Row -->
+          <div class="unusedCell"></div>
+          <div><p class="blackPiece" id="16"></p></div>
+          <div class="unusedCell"></div>
+          <div><p class="blackPiece" id="17"></p></div>
+          <div class="unusedCell"></div>
+          <div><p class="blackPiece" id="18"></p></div>
+          <div class="unusedCell"></div>
+          <div><p class="blackPiece" id="19"></p></div>
+          <!-- 8th Row -->
+          <div><p class="blackPiece" id="20"></p></div>
+          <div class="unusedCell"></div>
+          <div><p class="blackPiece" id="21"></p></div>
+          <div class="unusedCell"></div>
+          <div><p class="blackPiece" id="22"></p></div>
+          <div class="unusedCell"></div>
+          <div><p class="blackPiece" id="23"></p></div>
+          <div class="unusedCell"></div>
+        </section>
       </section>
-    </section>
-    <nav id="hiddenNav">
-      <div>
-        <ul class="menu">
-          <li>Reset Game</li>
-        </ul>
-      </div>
-    </nav>
+      <nav id="hiddenNav">
+        <div>
+          <ul class="menu">
+            <li>Reset Game</li>
+          </ul>
+        </div>
+      </nav>
+    </div>
   </body>
 </html>
