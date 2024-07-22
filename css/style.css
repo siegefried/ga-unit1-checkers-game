@@ -73,9 +73,9 @@ body {
 nav {
   display: flex;
   flex-direction: column;
-  background-color: rgba(234, 229, 233, 0.2);
+  background-color: #8e54ff;
   justify-content: center;
-  height: 100vh;
+  height: 100%;
 }
 
 section {
@@ -98,4 +98,75 @@ section {
 
 #hiddenNav {
   visibility: hidden;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu li {
+  display: block;
+  height: 100%;
+  font-size: 20px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-transform: uppercase;
+  text-shadow: 0 0 15px #8e54e9;
+  transition: all 300ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  text-align: center;
+  padding: 10%;
+  width: 100%;
+}
+
+.menu li:after,
+.menu li:before {
+  content: "";
+  position: absolute;
+  display: block;
+  border: 0px solid transparent;
+  width: 0%;
+  height: 0%;
+  transition: all 0.5s ease;
+}
+
+.menu li:after {
+  width: 0%;
+  height: 0%;
+  top: 0;
+  left: 0;
+  border-top: 2px solid transparent;
+  border-left: 2px solid transparent;
+}
+
+.menu li:before {
+  width: 0%;
+  height: 0%;
+  right: 0;
+  bottom: 0;
+  border-bottom: 2px solid transparent;
+  border-right: 2px solid transparent;
+}
+
+.menu li:hover::before,
+.menu li:hover::after {
+  width: 100%;
+  height: 100%;
+  border-color: #fff;
+}
+
+.fadedNav {
+  opacity: 0.2;
+  transition: opacity 0.5s ease;
+}
+
+.fadedNav:hover {
+  opacity: 1;
 }

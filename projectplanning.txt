@@ -94,3 +94,5 @@ const render = () -> {
 
 black king = add &#9818; as textContent
 white king = add &#9812; as textContent
+
+CSS for navbar borrowed from https://dev.to/kiranrajvjd/10-simple-navigation-bar-hover-animations-1980

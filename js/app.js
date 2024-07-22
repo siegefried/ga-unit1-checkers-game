@@ -69,6 +69,7 @@ let blackPiecesEls = document.querySelectorAll(".blackPiece");
 let whitePiecesEls = document.querySelectorAll(".whitePiece");
 const blackTurnEl = document.querySelector("#blackTurn");
 const whiteTurnEl = document.querySelector("#whiteTurn");
+const resetGameEl = document.querySelector("#resetGame");
 
 /*---------------------------- Render Functions -----------------------------*/
 
@@ -193,13 +194,13 @@ const initPlayerObjs = () => {
 };
 
 const init = () => {
-  renderTurnDisplay();
   removeTurnEvtListeners();
   initBoard();
   initPlayerObjs();
   game.turn = true;
   game.win = false;
   GainNode.activeId = -1;
+  renderTurnDisplay();
   evalPlayerPossibleMoves();
   removeMoveIfJump();
   renderInitBoard();
@@ -780,5 +781,7 @@ const addPiecesEventListeners = () => {
     }
   }
 };
+
+resetGameEl.addEventListener("click", init);
 
 init();
