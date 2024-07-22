@@ -1,69 +1,92 @@
 body {
-    display: flex;
-    height: 100vh;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
 }
 
 .turnIndicator {
-    display: flex;
-    justify-content: space-around;
+  display: flex;
+  justify-content: space-around;
 }
 
 .board {
-    display: flex;
-    flex-wrap: wrap;
-    width: 45vh;
-    height: 45vh;
+  display: flex;
+  flex-wrap: wrap;
+  width: 45vh;
+  height: 45vh;
+  margin: 0;
+  padding: 0;
 }
 
 .board div {
-    display: flex;
-    flex-basis: 12.5%;
-    height: 12.5%;
-    background-color: rgb(150, 149, 149);
-    justify-content: space-around;
+  display: flex;
+  flex-basis: 12.5%;
+  height: 12.5%;
+  background-color: rgb(150, 149, 149);
+  justify-content: space-around;
 }
 
 .board .unusedCell {
-    background-color: white;
+  background-color: white;
 }
 
 .blackPiece {
-    align-self: center;
-    height: 80%;
-    width: 80%;
-    background-color: black;
-    border: 2px solid white;
-    border-radius: 50%;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    text-align: center;
+  align-self: center;
+  height: 80%;
+  width: 80%;
+  background-color: black;
+  border: 2px solid white;
+  border-radius: 50%;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  text-align: center;
 }
 
 .whitePiece {
-    align-self: center;
-    height: 80%;
-    width: 80%;
-    background-color: rgba(224, 212, 212, 0.945);
-    border: 2px solid black;
-    border-radius: 50%;
-    box-shadow: rgba(255, 255, 255, 0.35) 0px 5px 15px;
-    text-align: center;
-    color: black;
+  align-self: center;
+  height: 80%;
+  width: 80%;
+  background-color: rgba(224, 212, 212, 0.945);
+  border: 2px solid black;
+  border-radius: 50%;
+  box-shadow: rgba(255, 255, 255, 0.35) 0px 5px 15px;
+  text-align: center;
+  color: black;
 }
 
 .isKing {
-    border-color: red;
+  border-color: red;
 }
 
 .moveBorder {
-    border: 3px solid rgb(12, 239, 12);
+  border: 3px solid rgb(12, 239, 12);
 }
 
 .jumpBorder {
-    border: 3px solid red;
+  border: 3px solid red;
 }
 
 .canJump {
-    border: 3px solid red;
+  border: 3px solid red;
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(204, 150, 255, 0.6);
+  justify-content: center;
+}
+
+section {
+  border-top: 0px solid black;
+}
+
+#turnIndicator {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.fadeOut {
+    color: gray;
 }

@@ -67,8 +67,20 @@ const game = {
 let cellEls = document.querySelectorAll(".board div");
 let blackPiecesEls = document.querySelectorAll(".blackPiece");
 let whitePiecesEls = document.querySelectorAll(".whitePiece");
+const blackTurnEl = document.querySelector("#blackTurn");
+const whiteTurnEl = document.querySelector("#whiteTurn");
 
 /*---------------------------- Render Functions -----------------------------*/
+
+const renderTurnDisplay = () => {
+  if (game.turn) {
+    whiteTurnEl.classList.add("fadeOut");
+    blackTurnEl.classList.remove("fadeOut");
+  } else {
+    whiteTurnEl.classList.remove("fadeOut");
+    blackTurnEl.classList.add("fadeOut");
+  }
+};
 
 const renderMovePosition = (index) => {
   cellEls[index].classList.add("moveBorder");
@@ -132,8 +144,6 @@ const renderInitBoard = () => {
   whitePiecesEls = document.querySelectorAll(".whitePiece");
 };
 
-const render = () => {};
-
 /*-------------------------------- Functions --------------------------------*/
 
 const initBoard = () => {
@@ -183,6 +193,7 @@ const initPlayerObjs = () => {
 };
 
 const init = () => {
+  renderTurnDisplay();
   removeTurnEvtListeners();
   initBoard();
   initPlayerObjs();
@@ -555,6 +566,7 @@ const switchTurn = () => {
   setPlayerMoveAndJumpToFalse();
   game.activeId = -1;
   game.turn = !game.turn;
+  renderTurnDisplay();
   evalPlayerPossibleMoves();
   isActionAvailable();
   if (game.win) {
