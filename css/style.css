@@ -192,3 +192,15 @@ section {
   justify-content: space-between;
   align-items: center;
 }
+
+#landingBtns {
+  display: grid;
+  gap: 1em;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+}
+
+#winMsg button {
+  display: block;
+  margin: 0 auto;
+}

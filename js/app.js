@@ -71,6 +71,10 @@ const blackTurnEl = document.querySelector("#blackTurn");
 const whiteTurnEl = document.querySelector("#whiteTurn");
 const resetGameEl = document.querySelector("#resetGame");
 const startBtnEL = document.querySelector("#start");
+const hideLandingPageEl = document.querySelector(".landingHidden");
+const mainGameEl = document.querySelector(".mainHidden");
+const winMsgEl = document.querySelector("#winMsg");
+const winMsgTextEl = document.querySelector("#winMsgText");
 
 /*---------------------------- Render Functions -----------------------------*/
 
@@ -147,10 +151,25 @@ const renderInitBoard = () => {
 };
 
 const renderGame = () => {
-  document.querySelector(".landingHidden").classList.add("hidden");
-  document.querySelector(".landingHidden").id = "notInUse";
-  document.querySelector(".mainHidden").classList.remove("hidden");
-  document.querySelector(".mainHidden").id = "main";
+  hideLandingPageEl.classList.add("hidden");
+  hideLandingPageEl.id = "notInUse";
+  mainGameEl.classList.remove("hidden");
+  mainGameEl.id = "main";
+};
+
+const renderWinMsg = (player) => {
+  let winMsg = "";
+  if (player) {
+    winMsg = "Black Wins! 🎉";
+  } else {
+    winMsg = "White Wins! 🎉";
+  }
+  winMsgTextEl.innerHTML = winMsg;
+  winMsgEl.show();
+};
+
+const hideWinMsg = () => {
+  winMsgEl.close();
 };
 
 /*-------------------------------- Functions --------------------------------*/
@@ -210,9 +229,9 @@ const init = () => {
   game.turn = true;
   game.win = false;
   GainNode.activeId = -1;
-  renderTurnDisplay();
   evalPlayerPossibleMoves();
   removeMoveIfJump();
+  renderTurnDisplay();
   renderInitBoard();
   addPiecesEventListeners();
 };
@@ -359,18 +378,6 @@ const evalPlayerTwoFwdMoves = (checker) => {
   }
 };
 
-const evalPlayerPossibleMoves = () => {
-  if (game.turn) {
-    for (const checker of game.playerOneCheckerObjs) {
-      evalPossibleMoves(checker);
-    }
-  } else {
-    for (const checker of game.playerTwoCheckerObjs) {
-      evalPossibleMoves(checker);
-    }
-  }
-};
-
 const evalPossibleMoves = (checker) => {
   if (game.turn) {
     evalPlayerOneFwdMoves(checker);
@@ -384,6 +391,18 @@ const evalPossibleMoves = (checker) => {
     }
   }
 };
+
+const evalPlayerPossibleMoves = () => {
+    if (game.turn) {
+      for (const checker of game.playerOneCheckerObjs) {
+        evalPossibleMoves(checker);
+      }
+    } else {
+      for (const checker of game.playerTwoCheckerObjs) {
+        evalPossibleMoves(checker);
+      }
+    }
+  };
 
 const setJumpToFalse = (checker) => {
   checker.plusEighteen = false;
@@ -529,14 +548,12 @@ const isOpponentZero = () => {
   if (game.turn) {
     if (game.playerTwoCheckerObjs.length === 0) {
       game.win = true;
-      //render P1 Win Message
-      console.log("P1 wins");
+      renderWinMsg(game.win);
     }
   } else {
     if (game.playerOneCheckerObjs.length === 0) {
       game.win = true;
-      //render P2 Win Message
-      console.log("P2 wins");
+      renderWinMsg(!game.win);
     }
   }
 };
@@ -559,11 +576,9 @@ const isActionAvailable = () => {
   if (checkerAction === 0) {
     game.win = true;
     if (game.turn) {
-      //render P2 Win Message
-      console.log("P2 wins");
+      renderWinMsg(!game.win);
     } else {
-      //render P1 Win Message
-      console.log("P1 wins");
+      renderWinMsg(game.win);
     }
   }
 };
