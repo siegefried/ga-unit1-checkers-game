@@ -200,7 +200,13 @@ section {
   grid-auto-columns: 1fr;
 }
 
+#winMsg {
+  background-color: rgb(33, 33, 33);
+}
+
 #winMsg button {
   display: block;
   margin: 0 auto;
+  height: 5vh;
+  width: 5vh;
 }

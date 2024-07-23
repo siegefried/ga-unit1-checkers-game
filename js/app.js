@@ -393,16 +393,16 @@ const evalPossibleMoves = (checker) => {
 };
 
 const evalPlayerPossibleMoves = () => {
-    if (game.turn) {
-      for (const checker of game.playerOneCheckerObjs) {
-        evalPossibleMoves(checker);
-      }
-    } else {
-      for (const checker of game.playerTwoCheckerObjs) {
-        evalPossibleMoves(checker);
-      }
+  if (game.turn) {
+    for (const checker of game.playerOneCheckerObjs) {
+      evalPossibleMoves(checker);
     }
-  };
+  } else {
+    for (const checker of game.playerTwoCheckerObjs) {
+      evalPossibleMoves(checker);
+    }
+  }
+};
 
 const setJumpToFalse = (checker) => {
   checker.plusEighteen = false;
