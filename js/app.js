@@ -206,18 +206,21 @@ const render = () => {
   renderKingCrown(playerObjs);
   renderPositions(playerObjs);
   renderCanJump(playerObjs);
+  renderWinMsg();
 };
 
 //dialogs
-const renderWinMsg = (player) => {
-  let winMsg = "";
-  if (player) {
-    winMsg = "Black Wins! 🎉";
-  } else {
-    winMsg = "White Wins! 🎉";
+const renderWinMsg = () => {
+  if (game.win) {
+    let winMsg = "";
+    if (game.turn) {
+      winMsg = "Black Wins! 🎉";
+    } else {
+      winMsg = "White Wins! 🎉";
+    }
+    winMsgTextEl.innerHTML = winMsg;
+    winMsgEl.show();
   }
-  winMsgTextEl.innerHTML = winMsg;
-  winMsgEl.show();
 };
 
 const renderRulesMsg = () => {
@@ -576,12 +579,10 @@ const isOpponentZero = () => {
   if (game.turn) {
     if (game.playerTwoCheckerObjs.length === 0) {
       game.win = true;
-      renderWinMsg(game.win);
     }
   } else {
     if (game.playerOneCheckerObjs.length === 0) {
       game.win = true;
-      renderWinMsg(!game.win);
     }
   }
 };
@@ -603,11 +604,7 @@ const isActionAvailable = () => {
   }
   if (checkerAction === 0) {
     game.win = true;
-    if (game.turn) {
-      renderWinMsg(!game.win);
-    } else {
-      renderWinMsg(game.win);
-    }
+    game.turn = !game.turn;
   }
 };
 
@@ -615,6 +612,7 @@ const switchTurn = () => {
   removeTurnEvtListeners();
   isOpponentZero();
   if (game.win) {
+    render();
     return;
   }
   setPlayerMoveAndJumpToFalse();
@@ -623,6 +621,7 @@ const switchTurn = () => {
   evalPlayerPossibleMoves();
   isActionAvailable();
   if (game.win) {
+    render();
     return;
   }
   removeMoveIfJump();
