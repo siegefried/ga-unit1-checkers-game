@@ -75,6 +75,9 @@ const hideLandingPageEl = document.querySelector(".landingHidden");
 const mainGameEl = document.querySelector(".mainHidden");
 const winMsgEl = document.querySelector("#winMsg");
 const winMsgTextEl = document.querySelector("#winMsgText");
+const rulesMsgEl = document.querySelector("#rulesMsg");
+const landingRulesBtnEl = document.querySelector("#landingRules");
+const navRulesBtnEl = document.querySelector("#navRules");
 
 /*---------------------------- Render Functions -----------------------------*/
 
@@ -168,8 +171,16 @@ const renderWinMsg = (player) => {
   winMsgEl.show();
 };
 
+const renderRulesMsg = () => {
+  rulesMsgEl.show();
+};
+
 const hideWinMsg = () => {
   winMsgEl.close();
+};
+
+const hideRulesMsg = () => {
+  rulesMsgEl.close();
 };
 
 /*-------------------------------- Functions --------------------------------*/
@@ -807,5 +818,11 @@ const addPiecesEventListeners = () => {
   }
 };
 
-startBtnEL.addEventListener("click", init);
-resetGameEl.addEventListener("click", init);
+const addNavEvtListeners = () => {
+  startBtnEL.addEventListener("click", init);
+  resetGameEl.addEventListener("click", init);
+  landingRulesBtnEl.addEventListener("click", renderRulesMsg);
+  navRulesBtnEl.addEventListener("click", renderRulesMsg);
+};
+
+addNavEvtListeners();

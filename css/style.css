@@ -200,13 +200,20 @@ section {
   grid-auto-columns: 1fr;
 }
 
-#winMsg {
+dialog {
   background-color: rgb(33, 33, 33);
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
-#winMsg button {
+dialog button {
   display: block;
   margin: 0 auto;
   height: 5vh;
   width: 5vh;
+}
+
+#rulesMsg p::first-letter {
+  color: var(--accent);
 }

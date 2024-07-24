@@ -9,6 +9,42 @@
     <title>Checkers Game</title>
   </head>
   <body>
+    <dialog id="rulesMsg">
+      <p>
+        1. There are 2 players, Black goes first. Player turn is indicated at
+        the top of the board. On each turn, a player can select a piece and move
+        or capture an enemy piece with it.
+      </p>
+      <p>
+        2. Player pieces can only move forward diagonally on the darker squares
+        of the board, one square on each turn, if the square is empty. Player
+        turn ends after a move.
+      </p>
+      <p>
+        3. Pieces can capture enemy pieces if the enemy is in a position they
+        could have moved to and there is an empty square in the same diagonal
+        direction for the piece to move to. If there is a further capture
+        opportunity after executing one, the player has to continue capturing
+        till none other is available. Player turn ends after capture or sequence
+        of captures.
+      </p>
+      <p>
+        4. If there is a chance to capture an enemy piece during the player's
+        turn, the player MUST perform a capture. If there is more than one
+        opportunity, the player can select which piece to use and which piece to
+        capture at their discretion.
+      </p>
+      <p>
+        5. On reaching the final row of an opponent's board, a piece is promoted
+        to a king. Kings can move and capture in all 4 diagonal directions. On
+        becoming a king, player turn ends.
+      </p>
+      <p>
+        6. The game ends when a player has no pieces remaining OR if they are
+        unable to take an action at the start of their turn.
+      </p>
+      <button onclick="hideRulesMsg()">X</button>
+    </dialog>
     <dialog id="winMsg">
       <p id="winMsgText"></p>
       <button onclick="hideWinMsg()">X</button>
@@ -18,7 +54,7 @@
         <h3>Welcome to Josh's Checkers</h3>
       </div>
       <div id="landingBtns">
-        <button>Rules</button>
+        <button id="landingRules">Rules</button>
         <button id="start">Start</button>
       </div>
     </div>
@@ -26,7 +62,7 @@
       <nav class="fadedNav">
         <div>
           <ul class="menu">
-            <li>Rules</li>
+            <li id="navRules">Rules</li>
             <li id="resetGame">Reset Game</li>
           </ul>
         </div>
