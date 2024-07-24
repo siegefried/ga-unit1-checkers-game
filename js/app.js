@@ -296,7 +296,7 @@ const init = () => {
   addPiecesEventListeners();
 };
 
-//Fwd is moving up the screen from perspective of playerOne
+//Fwd is moving up the screen from perspective of Black
 const evalPlayerFwdMoves = (checker) => {
   const leftJumpIndex = checker.boardIndex - 18;
   const leftMoveIndex = checker.boardIndex - 9;
@@ -354,7 +354,7 @@ const evalPlayerFwdMoves = (checker) => {
   }
 };
 
-//Bwd is moving down the screen from perspective of playerOne
+//Bwd is moving down the screen from perspective of Black
 const evalPlayerBwdMoves = (checker) => {
   const bwdLeftJumpIndex = checker.boardIndex + 14;
   const bwdLeftMoveIndex = checker.boardIndex + 7;
@@ -713,7 +713,6 @@ const handlePieceClick = (event) => {
   render();
   addPiecesEventListeners();
   const addJumpListener = (checker) => {
-    console.log("can jump");
     if (checker.plusEighteen) {
       cellEls[checker.boardIndex + 18].addEventListener(
         "click",
@@ -741,7 +740,6 @@ const handlePieceClick = (event) => {
   };
 
   const addMoveListener = (checker) => {
-    console.log("can move");
     if (checker.plusNine) {
       cellEls[checker.boardIndex + 9].addEventListener(
         "click",
@@ -772,7 +770,6 @@ const handlePieceClick = (event) => {
     for (const checker of game.playerOneCheckerObjs) {
       if (checker.checkerId === Number(event.target.id)) {
         if (!checker.canJump() && !checker.canMove()) {
-          console.log("no action");
           return;
         }
         if (checker.canJump()) {
@@ -787,7 +784,6 @@ const handlePieceClick = (event) => {
     for (const checker of game.playerTwoCheckerObjs) {
       if (checker.checkerId === Number(event.target.id)) {
         if (!checker.canJump() && !checker.canMove()) {
-          console.log("no action");
           return;
         }
         if (checker.canJump()) {
