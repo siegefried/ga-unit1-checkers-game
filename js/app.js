@@ -81,6 +81,13 @@ const navRulesBtnEl = document.querySelector("#navRules");
 
 /*---------------------------- Render Functions -----------------------------*/
 
+const renderLandToMain = () => {
+  hideLandingPageEl.classList.add("hidden");
+  hideLandingPageEl.id = "notInUse";
+  mainGameEl.classList.remove("hidden");
+  mainGameEl.id = "main";
+};
+
 const renderTurnDisplay = () => {
   if (game.turn) {
     whiteTurnEl.classList.add("fadeOut");
@@ -91,18 +98,6 @@ const renderTurnDisplay = () => {
   }
 };
 
-const renderMovePosition = (index) => {
-  cellEls[index].classList.add("moveBorder");
-};
-
-const renderJumpPosition = (index) => {
-  cellEls[index].classList.add("jumpBorder");
-};
-
-const renderCanJump = (index) => {
-  cellEls[index].classList.add("canJump");
-};
-
 const renderRemoveCellClasses = () => {
   for (const cell of cellEls) {
     cell.classList.remove("moveBorder");
@@ -111,26 +106,7 @@ const renderRemoveCellClasses = () => {
   }
 };
 
-const renderMovePlayer = (prevIndex, currentIndex) => {
-  const tempPiece = cellEls[prevIndex].firstChild;
-  cellEls[prevIndex].removeChild(cellEls[prevIndex].firstChild);
-  cellEls[currentIndex].appendChild(tempPiece);
-};
-
-const renderCaptureEnemy = (index) => {
-  cellEls[index].removeChild(cellEls[index].firstChild);
-};
-
-const renderKingCrown = (index) => {
-  cellEls[index].firstChild.classList.add("isKing");
-  if (game.turn) {
-    cellEls[index].firstChild.innerHTML = "&#9818;";
-  } else {
-    cellEls[index].firstChild.innerHTML = "&#9812;";
-  }
-};
-
-const renderInitBoard = () => {
+const renderPieces = () => {
   for (cell of cellEls) {
     cell.replaceChildren();
   }
@@ -153,22 +129,98 @@ const renderInitBoard = () => {
   whitePiecesEls = document.querySelectorAll(".whitePiece");
 };
 
-const renderGame = () => {
-  hideLandingPageEl.classList.add("hidden");
-  hideLandingPageEl.id = "notInUse";
-  mainGameEl.classList.remove("hidden");
-  mainGameEl.id = "main";
+const renderKingCrown = (arr) => {
+  for (const obj of arr) {
+    if (obj.isKing) {
+      cellEls[obj.boardIndex].firstChild.classList.add("isKing");
+      if (obj.checkerId > 11) {
+        cellEls[obj.boardIndex].firstChild.innerHTML = "&#9818;";
+      } else {
+        cellEls[obj.boardIndex].firstChild.innerHTML = "&#9812;";
+      }
+    }
+  }
 };
 
-const renderWinMsg = (player) => {
-  let winMsg = "";
-  if (player) {
-    winMsg = "Black Wins! 🎉";
-  } else {
-    winMsg = "White Wins! 🎉";
+const renderPositions = (arr) => {
+  for (const obj of arr) {
+    if (obj.checkerId === game.activeId) {
+      if (obj.plusEighteen) {
+        cellEls[obj.boardIndex + 18].classList.add("jumpBorder");
+      }
+      if (obj.plusFourteen) {
+        cellEls[obj.boardIndex + 14].classList.add("jumpBorder");
+      }
+      if (obj.minusEighteen) {
+        cellEls[obj.boardIndex - 18].classList.add("jumpBorder");
+      }
+      if (obj.minusFourteen) {
+        cellEls[obj.boardIndex - 14].classList.add("jumpBorder");
+      }
+      if (obj.plusNine) {
+        cellEls[obj.boardIndex + 9].classList.add("moveBorder");
+      }
+      if (obj.plusSeven) {
+        cellEls[obj.boardIndex + 7].classList.add("moveBorder");
+      }
+      if (obj.minusNine) {
+        cellEls[obj.boardIndex - 9].classList.add("moveBorder");
+      }
+      if (obj.minusSeven) {
+        cellEls[obj.boardIndex - 7].classList.add("moveBorder");
+      }
+    }
   }
-  winMsgTextEl.innerHTML = winMsg;
-  winMsgEl.show();
+  if (game.activeId === -1) {
+    for (const cell of cellEls) {
+      cell.classList.remove("moveBorder");
+      cell.classList.remove("jumpBorder");
+    }
+  }
+};
+
+const renderCanJump = (arr) => {
+  for (const obj of arr) {
+    if (obj.canJump()) {
+      cellEls[obj.boardIndex].classList.add("canJump");
+    }
+    if (game.activeId !== -1) {
+      for (const obj of arr) {
+        if (obj.checkerId !== game.activeId) {
+          cellEls[obj.boardIndex].classList.remove("canJump");
+        }
+      }
+    }
+  }
+};
+
+const render = () => {
+  const playerObjs = [
+    ...game.playerOneCheckerObjs,
+    ...game.playerTwoCheckerObjs,
+  ];
+
+  renderTurnDisplay();
+  renderRemoveCellClasses();
+  renderPieces();
+  renderKingCrown(playerObjs);
+  renderPositions(playerObjs);
+  renderCanJump(playerObjs);
+  renderWinMsg();
+};
+
+//dialogs
+const renderWinMsg = () => {
+  if (game.win) {
+    let winMsg = "";
+    if (game.turn) {
+      winMsg = "Black Wins! 🎉";
+    } else {
+      winMsg = "White Wins! 🎉";
+    }
+    winMsgTextEl.innerHTML = winMsg;
+    winMsgEl.show();
+  }
 };
 
 const renderRulesMsg = () => {
@@ -232,8 +284,6 @@ const initPlayerObjs = () => {
 };
 
 const init = () => {
-  renderGame();
-  renderRemoveCellClasses();
   removeTurnEvtListeners();
   initBoard();
   initPlayerObjs();
@@ -242,8 +292,7 @@ const init = () => {
   GainNode.activeId = -1;
   evalPlayerPossibleMoves();
   removeMoveIfJump();
-  renderTurnDisplay();
-  renderInitBoard();
+  render();
   addPiecesEventListeners();
 };
 
@@ -420,10 +469,6 @@ const removeMoveIfJump = () => {
     if (isJumpAvailable) {
       for (const checker of game.playerOneCheckerObjs) {
         setMoveToFalse(checker);
-        if (checker.canJump()) {
-          console.log("can jump");
-          renderCanJump([checker.boardIndex]);
-        }
       }
     }
   } else {
@@ -435,10 +480,6 @@ const removeMoveIfJump = () => {
     if (isJumpAvailable) {
       for (const checker of game.playerTwoCheckerObjs) {
         setMoveToFalse(checker);
-        if (checker.canJump()) {
-          console.log("can jump");
-          renderCanJump([checker.boardIndex]);
-        }
       }
     }
   }
@@ -466,7 +507,6 @@ const evalIsKing = () => {
       if (checker.boardIndex < 8 && !checker.isKing) {
         checker.isKing = true;
         game.activeId = KING;
-        renderKingCrown(checker.boardIndex);
       }
     }
   } else {
@@ -474,7 +514,6 @@ const evalIsKing = () => {
       if (checker.boardIndex > 55 && !checker.isKing) {
         checker.isKing = true;
         game.activeId = KING;
-        renderKingCrown(checker.boardIndex);
       }
     }
   }
@@ -522,6 +561,7 @@ const evalPostAction = () => {
     evalPossibleMoves(activeChecker);
     removeMoveIfJump();
     removeTurnEvtListeners();
+    render();
     if (activeChecker.canJump()) {
       cellEls[activeChecker.boardIndex].firstChild.addEventListener(
         "click",
@@ -539,12 +579,10 @@ const isOpponentZero = () => {
   if (game.turn) {
     if (game.playerTwoCheckerObjs.length === 0) {
       game.win = true;
-      renderWinMsg(game.win);
     }
   } else {
     if (game.playerOneCheckerObjs.length === 0) {
       game.win = true;
-      renderWinMsg(!game.win);
     }
   }
 };
@@ -566,11 +604,7 @@ const isActionAvailable = () => {
   }
   if (checkerAction === 0) {
     game.win = true;
-    if (game.turn) {
-      renderWinMsg(!game.win);
-    } else {
-      renderWinMsg(game.win);
-    }
+    game.turn = !game.turn;
   }
 };
 
@@ -578,18 +612,20 @@ const switchTurn = () => {
   removeTurnEvtListeners();
   isOpponentZero();
   if (game.win) {
+    render();
     return;
   }
   setPlayerMoveAndJumpToFalse();
   game.activeId = -1;
   game.turn = !game.turn;
-  renderTurnDisplay();
   evalPlayerPossibleMoves();
   isActionAvailable();
   if (game.win) {
+    render();
     return;
   }
   removeMoveIfJump();
+  render();
   addPiecesEventListeners();
 };
 
@@ -604,7 +640,6 @@ const handleCellClick = (event) => {
     }
   }
   event.target.classList.remove("actionCell");
-  renderRemoveCellClasses();
 
   const captureEnemy = (checker, jumpIndex) => {
     checker.jumpThisTurn = true;
@@ -637,7 +672,6 @@ const handleCellClick = (event) => {
       game.playerOneCheckerObjs.splice(enemyObjIndex, 1);
     }
     game.board[enemyIndex] = "";
-    renderCaptureEnemy(enemyIndex);
   };
 
   const movePlayerPiece = (checker) => {
@@ -649,7 +683,6 @@ const handleCellClick = (event) => {
       game.board[checker.boardIndex] = "";
       checker.boardIndex = boardIndex;
       game.board[boardIndex] = checker.checkerId;
-      renderMovePlayer(prevIndex, boardIndex);
       evalPostAction();
     }
   };
@@ -666,37 +699,34 @@ const handleCellClick = (event) => {
 };
 
 const handlePieceClick = (event) => {
-  renderRemoveCellClasses();
   for (const cell of cellEls) {
     cell.removeEventListener("click", handleCellClick);
   }
   game.activeId = Number(event.target.id);
 
-  const displayJump = (checker) => {
+  render();
+  addPiecesEventListeners();
+  const addJumpListener = (checker) => {
     console.log("can jump");
     if (checker.plusEighteen) {
-      renderJumpPosition(checker.boardIndex + 18);
       cellEls[checker.boardIndex + 18].addEventListener(
         "click",
         handleCellClick
       );
     }
     if (checker.plusFourteen) {
-      renderJumpPosition(checker.boardIndex + 14);
       cellEls[checker.boardIndex + 14].addEventListener(
         "click",
         handleCellClick
       );
     }
     if (checker.minusEighteen) {
-      renderJumpPosition(checker.boardIndex - 18);
       cellEls[checker.boardIndex - 18].addEventListener(
         "click",
         handleCellClick
       );
     }
     if (checker.minusFourteen) {
-      renderJumpPosition(checker.boardIndex - 14);
       cellEls[checker.boardIndex - 14].addEventListener(
         "click",
         handleCellClick
@@ -704,33 +734,27 @@ const handlePieceClick = (event) => {
     }
   };
 
-  const displayMove = (checker) => {
+  const addMoveListener = (checker) => {
     console.log("can move");
     if (checker.plusNine) {
-      renderMovePosition(checker.boardIndex + 9);
       cellEls[checker.boardIndex + 9].addEventListener(
         "click",
         handleCellClick
       );
     }
     if (checker.plusSeven) {
-      renderMovePosition(checker.boardIndex + 7);
       cellEls[checker.boardIndex + 7].addEventListener(
         "click",
         handleCellClick
       );
     }
     if (checker.minusNine) {
-      renderMovePosition(checker.boardIndex - 9);
-
       cellEls[checker.boardIndex - 9].addEventListener(
         "click",
         handleCellClick
       );
     }
     if (checker.minusSeven) {
-      renderMovePosition(checker.boardIndex - 7);
-
       cellEls[checker.boardIndex - 7].addEventListener(
         "click",
         handleCellClick
@@ -746,10 +770,10 @@ const handlePieceClick = (event) => {
           return;
         }
         if (checker.canJump()) {
-          displayJump(checker);
+          addJumpListener(checker);
         }
         if (checker.canMove()) {
-          displayMove(checker);
+          addMoveListener(checker);
         }
       }
     }
@@ -761,10 +785,10 @@ const handlePieceClick = (event) => {
           return;
         }
         if (checker.canJump()) {
-          displayJump(checker);
+          addJumpListener(checker);
         }
         if (checker.canMove()) {
-          displayMove(checker);
+          addMoveListener(checker);
         }
       }
     }
@@ -799,7 +823,10 @@ const addPiecesEventListeners = () => {
 };
 
 const addNavEvtListeners = () => {
-  startBtnEL.addEventListener("click", init);
+  startBtnEL.addEventListener("click", () => {
+    renderLandToMain();
+    init();
+  });
   resetGameEl.addEventListener("click", init);
   landingRulesBtnEl.addEventListener("click", renderRulesMsg);
   navRulesBtnEl.addEventListener("click", renderRulesMsg);
