@@ -248,33 +248,55 @@ const init = () => {
 };
 
 //Fwd is moving up the screen from perspective of playerOne
-const evalPlayerOneFwdMoves = (checker) => {
+const evalPlayerFwdMoves = (checker) => {
   const leftJumpIndex = checker.boardIndex - 18;
   const leftMoveIndex = checker.boardIndex - 9;
   const rightJumpIndex = checker.boardIndex - 14;
   const rightMoveIndex = checker.boardIndex - 7;
+
   if (
     game.board[leftJumpIndex] === "" &&
-    game.board[leftMoveIndex] < 12 &&
-    game.board[leftMoveIndex] !== "" &&
     cellEls[leftJumpIndex].classList.contains("unusedCell") === false
   ) {
-    checker.minusEighteen = true;
+    if (game.turn) {
+      if (game.board[leftMoveIndex] < 12 && game.board[leftMoveIndex] !== "") {
+        checker.minusEighteen = true;
+      }
+    } else {
+      if (game.board[leftMoveIndex] > 11 && game.board[leftMoveIndex] !== "") {
+        checker.minusEighteen = true;
+      }
+    }
   }
+
   if (
     game.board[rightJumpIndex] === "" &&
-    game.board[rightMoveIndex] < 12 &&
-    game.board[rightMoveIndex] !== "" &&
     cellEls[rightJumpIndex].classList.contains("unusedCell") === false
   ) {
-    checker.minusFourteen = true;
+    if (game.turn) {
+      if (
+        game.board[rightMoveIndex] < 12 &&
+        game.board[rightMoveIndex] !== ""
+      ) {
+        checker.minusFourteen = true;
+      }
+    } else {
+      if (
+        game.board[rightMoveIndex] > 11 &&
+        game.board[rightMoveIndex] !== ""
+      ) {
+        checker.minusFourteen = true;
+      }
+    }
   }
+
   if (
     game.board[leftMoveIndex] === "" &&
     cellEls[leftMoveIndex].classList.contains("unusedCell") === false
   ) {
     checker.minusNine = true;
   }
+
   if (
     game.board[rightMoveIndex] === "" &&
     cellEls[rightMoveIndex].classList.contains("unusedCell") === false
@@ -284,121 +306,79 @@ const evalPlayerOneFwdMoves = (checker) => {
 };
 
 //Bwd is moving down the screen from perspective of playerOne
-const evalPlayerOneBwdMoves = (checker) => {
+const evalPlayerBwdMoves = (checker) => {
   const bwdLeftJumpIndex = checker.boardIndex + 14;
   const bwdLeftMoveIndex = checker.boardIndex + 7;
   const bwdRightJumpIndex = checker.boardIndex + 18;
   const bwdRightMoveIndex = checker.boardIndex + 9;
+
   if (
     game.board[bwdLeftJumpIndex] === "" &&
-    game.board[bwdLeftMoveIndex] < 12 &&
-    game.board[bwdLeftMoveIndex] !== "" &&
     cellEls[bwdLeftJumpIndex].classList.contains("unusedCell") === false
   ) {
-    checker.plusFourteen = true;
+    if (game.turn) {
+      if (
+        game.board[bwdLeftMoveIndex] < 12 &&
+        game.board[bwdLeftMoveIndex] !== ""
+      ) {
+        checker.plusFourteen = true;
+      }
+    } else {
+      if (
+        game.board[bwdLeftMoveIndex] > 11 &&
+        game.board[bwdLeftMoveIndex] !== ""
+      ) {
+        checker.plusFourteen = true;
+      }
+    }
   }
+
   if (
     game.board[bwdRightJumpIndex] === "" &&
-    game.board[bwdRightMoveIndex] < 12 &&
-    game.board[bwdRightMoveIndex] !== "" &&
     cellEls[bwdRightJumpIndex].classList.contains("unusedCell") === false
   ) {
-    checker.plusEighteen = true;
+    if (game.turn) {
+      if (
+        game.board[bwdRightMoveIndex] < 12 &&
+        game.board[bwdRightMoveIndex] !== ""
+      ) {
+        checker.plusEighteen = true;
+      }
+    } else {
+      if (
+        game.board[bwdRightMoveIndex] > 11 &&
+        game.board[bwdRightMoveIndex] !== ""
+      ) {
+        checker.plusEighteen = true;
+      }
+    }
   }
+
   if (
     game.board[bwdLeftMoveIndex] === "" &&
     cellEls[bwdLeftMoveIndex].classList.contains("unusedCell") === false
   ) {
     checker.plusSeven = true;
   }
+
   if (
     game.board[bwdRightMoveIndex] === "" &&
     cellEls[bwdRightMoveIndex].classList.contains("unusedCell") === false
   ) {
     checker.plusNine = true;
-  }
-};
-
-const evalPlayerTwoBwdMoves = (checker) => {
-  const bwdLeftJumpIndex = checker.boardIndex + 14;
-  const bwdLeftMoveIndex = checker.boardIndex + 7;
-  const bwdRightJumpIndex = checker.boardIndex + 18;
-  const bwdRightMoveIndex = checker.boardIndex + 9;
-  if (
-    game.board[bwdLeftJumpIndex] === "" &&
-    game.board[bwdLeftMoveIndex] > 11 &&
-    game.board[bwdLeftMoveIndex] !== "" &&
-    cellEls[bwdLeftJumpIndex].classList.contains("unusedCell") === false
-  ) {
-    checker.plusFourteen = true;
-  }
-  if (
-    game.board[bwdRightJumpIndex] === "" &&
-    game.board[bwdRightMoveIndex] > 11 &&
-    game.board[bwdRightMoveIndex] !== "" &&
-    cellEls[bwdRightJumpIndex].classList.contains("unusedCell") === false
-  ) {
-    checker.plusEighteen = true;
-  }
-  if (
-    game.board[bwdLeftMoveIndex] === "" &&
-    cellEls[bwdLeftMoveIndex].classList.contains("unusedCell") === false
-  ) {
-    checker.plusSeven = true;
-  }
-  if (
-    game.board[bwdRightMoveIndex] === "" &&
-    cellEls[bwdRightMoveIndex].classList.contains("unusedCell") === false
-  ) {
-    checker.plusNine = true;
-  }
-};
-
-const evalPlayerTwoFwdMoves = (checker) => {
-  const leftJumpIndex = checker.boardIndex - 18;
-  const leftMoveIndex = checker.boardIndex - 9;
-  const rightJumpIndex = checker.boardIndex - 14;
-  const rightMoveIndex = checker.boardIndex - 7;
-  if (
-    game.board[leftJumpIndex] === "" &&
-    game.board[leftMoveIndex] > 11 &&
-    game.board[leftMoveIndex] !== "" &&
-    cellEls[leftJumpIndex].classList.contains("unusedCell") === false
-  ) {
-    checker.minusEighteen = true;
-  }
-  if (
-    game.board[rightJumpIndex] === "" &&
-    game.board[rightMoveIndex] > 11 &&
-    game.board[rightMoveIndex] !== "" &&
-    cellEls[rightJumpIndex].classList.contains("unusedCell") === false
-  ) {
-    checker.minusFourteen = true;
-  }
-  if (
-    game.board[leftMoveIndex] === "" &&
-    cellEls[leftMoveIndex].classList.contains("unusedCell") === false
-  ) {
-    checker.minusNine = true;
-  }
-  if (
-    game.board[rightMoveIndex] === "" &&
-    cellEls[rightMoveIndex].classList.contains("unusedCell") === false
-  ) {
-    checker.minusSeven = true;
   }
 };
 
 const evalPossibleMoves = (checker) => {
   if (game.turn) {
-    evalPlayerOneFwdMoves(checker);
+    evalPlayerFwdMoves(checker);
     if (checker.isKing) {
-      evalPlayerOneBwdMoves(checker);
+      evalPlayerBwdMoves(checker);
     }
   } else {
-    evalPlayerTwoBwdMoves(checker);
+    evalPlayerBwdMoves(checker);
     if (checker.isKing) {
-      evalPlayerTwoFwdMoves(checker);
+      evalPlayerFwdMoves(checker);
     }
   }
 };
