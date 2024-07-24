@@ -535,6 +535,7 @@ const locateActiveChecker = () => {
   }
 };
 
+//post action is after cell click
 const evalPostAction = () => {
   let didPlayerJump = false;
   if (game.turn) {
