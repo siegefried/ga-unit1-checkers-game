@@ -289,7 +289,7 @@ const init = () => {
   initPlayerObjs();
   game.turn = true;
   game.win = false;
-  GainNode.activeId = -1;
+  game.activeId = -1;
   evalPlayerPossibleMoves();
   removeMoveIfJump();
   render();
