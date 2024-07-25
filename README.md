@@ -40,17 +40,28 @@ Check out the rules and the game at my [deployed page](https://siegefried.github
 
 At the moment I am not too familiar with CSS, so a large part of the fancier CSS used was referenced from the following sources
 
-[Simple CSS](https://simplecss.org/)
+- [Simple CSS](https://simplecss.org/)
+\
 The framework I built off from
 
-[Navbar Animation CSS](https://dev.to/kiranrajvjd/10-simple-navigation-bar-hover-animations-1980)
+- [Navbar Animation CSS](https://dev.to/kiranrajvjd/10-simple-navigation-bar-hover-animations-1980)
+\
 The visual effect to outline the element in my navbar
 
-[Landing Page Buttons to Same Size](https://css-tricks.com/equal-columns-with-flexbox-its-more-complicated-than-you-might-think/) I struggled to get my 2 buttons to the same size using just Flexbox
+- [Landing Page Buttons to Same Size](https://css-tricks.com/equal-columns-with-flexbox-its-more-complicated-than-you-might-think/)
+\
+I struggled to get my 2 buttons to the same size using just flexbox
 
+\
 I ran into an error in the console after deployment for not being able to find favicon.ico, and used the following source to generate one
 
-[favicon.io](https://favicon.io/favicon-generator/)
+- [favicon.io](https://favicon.io/favicon-generator/)
+
+\
+Aside from that, for technical help/syntax issues, I consulted
+
+- [w3schools](https://www.w3schools.com/)
+- [MDN Web Docs](https://developer.mozilla.org/en-US/)
 
 ## Description
 
@@ -137,6 +148,7 @@ We can now determine that our object to represent a player's piece needs to hold
 - a way to know where it is on the board
 - whether it has become a King
 - which directions it can move/capture (+/- 7/9 14/18)
+- whether it has already made a capture this turn
 
 ## Initial Data Structure of Game State
 
@@ -158,7 +170,7 @@ Day 1: Implement board and pieces, simulate movement
 \
 Day 2: Base logic Implementation (evaluation of actions etc.)
 \
-Day 3: Movement and Jump Logic
+Day 3: Movement, Switch Turn and Jump Logic
 \
 Day 4: King, Win Condition
 \
@@ -171,3 +183,97 @@ Day 7: Documentation or working on JS as needed
 Day 8: End of Project / Presentation
 
 When coding, I was frequently testing with console.logs to ensure I was getting the logic for evaluators right. I also attempted to rememeber to create a new git commit every time I implemented a feature. I got overconfident about how things "should" work once and had to revert to an older commit.
+
+## Day 1
+
+To be frank, it was very unsettling to be on my own without any prompts on what to do after just 2 weeks of bootcamp classes. I began with the basics, getting the HTML to show a chess board. I used a table initially but was advised during consultation with the instructor to draw the board using flexbox or grid.
+
+I recreated the board in flexbox, added all 24 checker pieces, and created a function simulated movement to ensure that I could at least proceed with testing.
+
+At this point I was feeling lost, but plodded on with creating evaluation functions for actions and the like. A class was also created for representing the checker piece object. I originally intended to flood the board array with 64 elements numbered 0 to 63 but realized how illogical it would be duplicate the role of the index, and reworked it so that the game.board[index] represented whether a specific piece exists on that location of the board.
+
+I also reworked the game state to store the player objects instead of the number of playerPieces left, since I could obtain that using array.length
+
+Over 400 lines of code and nothing actually moved due to logic! 😒
+
+***Learning takeaway of the day: Planning is crucial!***
+
+## Day 2
+
+After a good night's rest, I discovered that a large part of what I had allocated for Day 2 had been done in Day 1... and decided to implement move capability for the first player (Black). In the midst of doing this, I realized that it made sense to add methods to my Checker class instead of typing out multiple keys.
+
+Finally getting Black to make a move after the evaluation functions went off was a great feeling! Since Black could move now, I had to implement a switch turn function to get White to move.
+
+I spent a large part of the day doing testing and debugging, and called it a night before implementing capture/jump logic.
+
+***Learning takeaway of the day: When you feel like you are typing too much, there is probably a better way you already know*** 💡
+
+## Day 3
+
+The day was off to a great start as I implemented the jump function. Since the game was nearing completion, I thought about adding the reset game functionality, as it would also help with testing. To my horror, I realized that a reset of the game would involve using JS to create elements to "re-produce" pieces that were captured, which deviated from my original plan of creating the game board and pieces with just HTML and CSS. 
+
+It was also at this point that I recalled that my implementation of visual changes on the screen would make me unable to render the game via the game state. It was sobering but I decided to press on... we'll get a working game first!
+
+I then added the functions for consecutive jumps and making a piece a King, then worked on debugging. A major challenge I had here was that I needed a function that evaluated a single checker piece (the one that captured) but my original function was not coded for that. Therefore, I had to do some bit of refactoring. The game itself was operational at this point.
+
+***Learning takeaway of the day: Unless you are absolutely sure you will not need to re-use the code, keep the functions short!***
+
+***Learning takeaway of the day: While it is okay to deviate from our original goal, it is probably best to not assume that we will not attempt a more complex implementation than planned***
+
+*At least I have the confidence to recreate the entire board and all the pieces in JS instead of directly via HTML now* 🎉
+
+## Day 4
+
+I am not sure if I should declare CSS the bane of my existence but it certainly feels like it. Here I was, 2 days ahead of schedule, thinking that there would be plenty of time for CSS... and it took me an entire day to be done with the player turn indicator, style the navbar, and add a landing page.
+
+Undoubtedly, I had underestimated my capacity for the job. There probably is a good reason why designers are highly valued! 🤣
+
+***Learning takeaway of the day: If you are not familiar with something, NEVER assume it will be easy***
+
+*I now have severe doubts how well I will be able to do frontend* 😰
+
+## Day 5
+
+Still struggling with CSS! Experimented with dialogs for most of the day. Wasn't fully happy with what I came up with but it would have to do. Honestly speaking, I am feeling very unproductive when working on CSS, and decided to spend the next day refactoring my code, focusing on
+
+- actionEvaluation functions
+- render functions
+
+The latter will be a hefty challenge, I'm going to make it directly render the game from the state!
+
+***Learning takeaway of the day: You are NEVER done with CSS*** 🙄
+
+## Day 6
+
+Back to the more familiar territory of JS! Things should go smoothly... right? After an initially smooth refactoring of the action evaluation function for the players, the **big-headed** me decided to tackle the entire render function at once. In retrospect, this was probably a doomed endeavor from the start for a novice, and I had to revert my previous commit once. 🤯
+
+That said, I really enjoyed the process of refactoring the visual display to directly display the game state, and am really appreciative of the convenience that it offers for testing. I have never had a clearer understanding of *save states*.
+
+After I was done testing on my dev machine, I deployed the game to github pages. That was when I noticed a new horror... my board looked horrible in light mode. Yes, it seems I will NEVER be done with CSS... 😡
+
+***Learning takeaway of the day: The MVC pattern concept is very useful and I should have tried to strictly adhere to it from the beginning (based on my current understanding anyway).***
+
+## Day 7
+
+The day this document was created! As I went through the project requirements though, I found yet another oversight.
+
+```
+The game can be played without encountering errors. No errors may be present in the console in the browser.
+```
+
+I had yet to check the console in my deployed page! Lo and behold, there was an error prompting me for a favicon.ico. While it was not too complex to resolve that, it is yet another good reminder that there is always more to learn and keep in mind.
+
+***Learning takeaway of the day: Reflection is an important aspect of software development***
+
+## Future Development
+As this was created for project submission and there is likely a lot more coding and learning to do, I am unsure if there will be further iterations. At the moment there are 4 issues that stand out to me:
+
+1. Toggling of light / dark mode
+2. Making sure the King symbols show up properly in light mode (the only apparent visual indicator is a red border, due to the color of the symbol)
+3. Making the dialogs look better, maybe adding a scroll function 
+4. AI to play against
+
+## Summary
+It has been great fun to embark on this project and I feel like I have learned a lot throughout the process. It is very motivating to build something using the concepts learned in class.
+
+The code I am most proud of is the creation of the render function to display the game state, it was the hardest part of the entire project game logic wise, especially with the patchwork style of render functions I was using to make visual changes prior to the refactor. I shudder to think of how long it would have taken had I directly changed the display without grouping all the functions that did those together. 
