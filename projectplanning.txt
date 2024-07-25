@@ -3,8 +3,8 @@ Choice of Game: Checkers
 User Stories:
 As a user, I want to be able to see a landing page to know I'm at the right place
 As a user, I want to be able to check the rules of the game
+As a user, I want to know if it is my turn
 As a user, I want to be able to see the moves available to me when I select a piece (force jump if available)
-As a user, I want to be able to see the opponent's move on their turn at the start of my turn
 As a user, I want to be able to receive a message with the outcome of the game
 As a user, I want to have the option to play another round
 
@@ -97,3 +97,4 @@ white king = add &#9812; as textContent
 
 CSS for navbar borrowed from https://dev.to/kiranrajvjd/10-simple-navigation-bar-hover-animations-1980
 CSS to get landing buttons to same size: https://css-tricks.com/equal-columns-with-flexbox-its-more-complicated-than-you-might-think/
+favicon: https://favicon.io/favicon-generator/
