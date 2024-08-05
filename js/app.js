@@ -837,6 +837,8 @@ const addNavEvtListeners = () => {
 
 addNavEvtListeners();
 
+
+//test code
 const loadNukeState = () => {
   //remove playerOne objects
   game.playerOneCheckerObjs.length = 0;
