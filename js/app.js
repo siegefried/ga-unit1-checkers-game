@@ -110,7 +110,7 @@ const renderPieces = () => {
   for (cell of cellEls) {
     cell.replaceChildren();
   }
-  for (i = 0; i < game.board.length; i++) {
+  for (let i = 0; i < game.board.length; i++) {
     if (game.board[i] !== "") {
       if (game.board[i] < 12) {
         cellEls[i].appendChild(document.createElement("p"));
@@ -239,7 +239,7 @@ const hideRulesMsg = () => {
 
 const initBoard = () => {
   game.board.length = 0;
-  for (i = 0; i < 12; i++) {
+  for (let i = 0; i < 12; i++) {
     if (i > 3 && i < 8) {
       game.board.push(i);
       game.board.push("");
@@ -248,10 +248,10 @@ const initBoard = () => {
       game.board.push(i);
     }
   }
-  for (i = 0; i < 16; i++) {
+  for (let i = 0; i < 16; i++) {
     game.board.push("");
   }
-  for (i = 12; i < 24; i++) {
+  for (let i = 12; i < 24; i++) {
     if (i > 15 && i < 20) {
       game.board.push("");
       game.board.push(i);
@@ -265,7 +265,7 @@ const initBoard = () => {
 const initPlayerObjs = () => {
   game.playerOneCheckerObjs.length = 0;
   game.playerTwoCheckerObjs.length = 0;
-  for (i = 0; i < 24; i++) {
+  for (let i = 0; i < 24; i++) {
     if (i < 12) {
       game.playerTwoCheckerObjs.push(new Checker());
       game.playerTwoCheckerObjs[i].checkerId = i;
@@ -836,3 +836,62 @@ const addNavEvtListeners = () => {
 };
 
 addNavEvtListeners();
+
+const loadNukeState = () => {
+  //remove playerOne objects
+  game.playerOneCheckerObjs.length = 0;
+  //remove player pieces from board
+  for (let i in game.board) {
+    if (game.board[i] > 11) {
+      game.board[i] = "";
+    }
+  }
+  //winner determined
+  game.win = true;
+  //White is the winner
+  game.turn = false;
+};
+
+let gameSave = {};
+const saveState = () => {
+  gameSave = JSON.parse(JSON.stringify(game));
+  console.log(gameSave);
+};
+
+const loadState = () => {
+  for (const key in game) {
+    game[key] = gameSave[key];
+  }
+  const playerObjs = [
+    ...game.playerOneCheckerObjs,
+    ...game.playerTwoCheckerObjs,
+  ];
+  for (const obj of playerObjs) {
+    obj.canJump = () => {
+      if (
+        this.plusEighteen ||
+        this.plusFourteen ||
+        this.minusEighteen ||
+        this.minusFourteen
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+    obj.canMove = () => {
+      if (
+        this.plusNine ||
+        this.plusSeven ||
+        this.minusNine ||
+        this.minusSeven
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+  }
+  render();
+  addPiecesEventListeners();
+};
